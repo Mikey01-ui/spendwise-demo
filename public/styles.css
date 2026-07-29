@@ -122,6 +122,95 @@ body.demo-mode .sidebar {
 body.demo-mode .mobile-header {
   top: 42px;
 }
+
+/* Embed preview (portfolio iframe): hide chrome, fit iframe height, show dashboard */
+body.demo-mode.embed-preview {
+  height: 100%;
+  overflow: hidden;
+}
+
+html:has(body.demo-mode.embed-preview) {
+  height: 100%;
+  overflow: hidden;
+}
+
+body.demo-mode.embed-preview .app-layout {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  padding-top: 42px;
+  box-sizing: border-box;
+  display: block !important;
+}
+
+body.demo-mode.embed-preview .sidebar,
+body.demo-mode.embed-preview .mobile-header {
+  display: none !important;
+}
+
+body.demo-mode.embed-preview .bottom-nav {
+  display: none !important;
+}
+
+body.demo-mode.embed-preview .app-layout .main-content,
+body.demo-mode.embed-preview .app-layout .sidebar ~ .main-content,
+body.demo-mode.embed-preview .app-layout .sidebar.collapsed ~ .main-content {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  min-height: 0 !important;
+  padding: 12px 14px 16px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  display: block !important;
+}
+
+body.demo-mode.embed-preview .dashboard-grid {
+  grid-template-columns: 1fr !important;
+  gap: 16px !important;
+}
+
+body.demo-mode.embed-preview .pane-header {
+  margin-bottom: 16px !important;
+}
+
+body.demo-mode.embed-preview .pane-header h1 {
+  font-size: 1.15rem !important;
+}
+
+body.demo-mode.embed-preview .pane-header p {
+  font-size: 0.8rem !important;
+}
+
+body.demo-mode.embed-preview .header-actions .btn-add-tx-trigger span,
+body.demo-mode.embed-preview .header-actions .btn-settings-header,
+body.demo-mode.embed-preview .header-actions .month-picker-trigger {
+  display: none !important;
+}
+
+body.demo-mode.embed-preview .top-row-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+@media (max-width: 768px) {
+  body.demo-mode .app-layout {
+    padding-top: 0 !important;
+  }
+
+  body.demo-mode .app-layout .main-content,
+  body.demo-mode .app-layout .sidebar ~ .main-content,
+  body.demo-mode .app-layout .sidebar.collapsed ~ .main-content {
+    top: 42px !important;
+  }
+}
 .text-right { text-align: right; }
 .text-center { text-align: center; }
 .text-green { color: var(--color-green) !important; }
@@ -4102,11 +4191,13 @@ body {
   }
 }
 
-/* Let active tab panes grow to fill the container height */
+/* Let active tab panes grow naturally so main-content can scroll */
 .app-layout .tab-pane.active {
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 1 !important;
+  display: block !important;
+  flex: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
 }
 
 /* Let the widget card (like table card when empty) grow vertically */

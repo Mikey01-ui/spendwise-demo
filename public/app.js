@@ -417,8 +417,20 @@ const updateMonthPickerLabels = () => {
 
 // ==================== DEMO MODE ====================
 
+const isEmbedPreview = () => {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+};
+
 const initDemoMode = () => {
   document.body.classList.add('demo-mode');
+  if (isEmbedPreview()) {
+    document.body.classList.add('embed-preview');
+    state.activeTab = 'dashboard';
+  }
   const banner = document.getElementById('demo-banner');
   if (banner) banner.classList.remove('hidden');
 
