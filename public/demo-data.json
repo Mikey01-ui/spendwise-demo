@@ -1,0 +1,454 @@
+{
+  "profile": {
+    "currency": "EUR",
+    "hourlyWage": 18.5,
+    "startingBalance": 2450.0,
+    "displayName": "Alex"
+  },
+  "budgets": {
+    "Food": 320,
+    "Shopping": 180,
+    "Transport": 95,
+    "Miscellaneous": 120
+  },
+  "transactions": [
+    {
+      "id": "demo_tx_001",
+      "type": "income",
+      "amount": 2200.0,
+      "name": "Freelance retainer — Studio Nova",
+      "date": "2026-07-01",
+      "category": "Salary",
+      "isNecessary": true,
+      "notes": "Monthly client payment"
+    },
+    {
+      "id": "demo_tx_002",
+      "type": "expense",
+      "amount": 42.5,
+      "name": "Green Basket Market",
+      "date": "2026-07-02",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Weekly groceries"
+    },
+    {
+      "id": "demo_tx_003",
+      "type": "expense",
+      "amount": 18.9,
+      "name": "MetroLine Transit",
+      "date": "2026-07-03",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Commute pass top-up"
+    },
+    {
+      "id": "demo_tx_004",
+      "type": "expense",
+      "amount": 64.0,
+      "name": "Thread & Co.",
+      "date": "2026-07-04",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Summer sale hoodie"
+    },
+    {
+      "id": "demo_tx_005",
+      "type": "expense",
+      "amount": 12.4,
+      "name": "Corner Café",
+      "date": "2026-07-05",
+      "category": "Food",
+      "isNecessary": false,
+      "notes": "Coffee with friend"
+    },
+    {
+      "id": "demo_tx_006",
+      "type": "income",
+      "amount": 350.0,
+      "name": "Side project payout",
+      "date": "2026-07-06",
+      "category": "Side Gig",
+      "isNecessary": true,
+      "notes": "Landing page delivery"
+    },
+    {
+      "id": "demo_tx_007",
+      "type": "expense",
+      "amount": 29.99,
+      "name": "StreamBox Plus",
+      "date": "2026-07-07",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Entertainment subscription"
+    },
+    {
+      "id": "demo_tx_008",
+      "type": "expense",
+      "amount": 9.5,
+      "name": "CityRide Bike Share",
+      "date": "2026-07-08",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Evening ride home"
+    },
+    {
+      "id": "demo_tx_009",
+      "type": "expense",
+      "amount": 87.2,
+      "name": "Fresh Fields Superstore",
+      "date": "2026-07-10",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Bulk shop"
+    },
+    {
+      "id": "demo_tx_010",
+      "type": "expense",
+      "amount": 24.0,
+      "name": "CloudHost Pro",
+      "date": "2026-07-11",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Homelab hosting"
+    },
+    {
+      "id": "demo_tx_011",
+      "type": "expense",
+      "amount": 55.0,
+      "name": "Pixel Market",
+      "date": "2026-07-12",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Mechanical keyboard keycaps"
+    },
+    {
+      "id": "demo_tx_012",
+      "type": "expense",
+      "amount": 16.75,
+      "name": "Lunch Box Deli",
+      "date": "2026-07-14",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Work lunch"
+    },
+    {
+      "id": "demo_tx_013",
+      "type": "expense",
+      "amount": 34.5,
+      "name": "MetroLine Transit",
+      "date": "2026-07-15",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Monthly travel bundle"
+    },
+    {
+      "id": "demo_tx_014",
+      "type": "income",
+      "amount": 120.0,
+      "name": "Refund — Pixel Market",
+      "date": "2026-07-16",
+      "category": "Refund",
+      "isNecessary": true,
+      "notes": "Returned duplicate order"
+    },
+    {
+      "id": "demo_tx_015",
+      "type": "expense",
+      "amount": 19.99,
+      "name": "GameVault Store",
+      "date": "2026-07-18",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Indie game purchase"
+    },
+    {
+      "id": "demo_tx_016",
+      "type": "expense",
+      "amount": 45.0,
+      "name": "Weekend Brunch Co.",
+      "date": "2026-07-20",
+      "category": "Food",
+      "isNecessary": false,
+      "notes": "Sunday brunch"
+    },
+    {
+      "id": "demo_tx_017",
+      "type": "expense",
+      "amount": 11.2,
+      "name": "QuickMart Express",
+      "date": "2026-07-22",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Snacks and drinks"
+    },
+    {
+      "id": "demo_tx_018",
+      "type": "expense",
+      "amount": 72.0,
+      "name": "TradeDesk Monthly",
+      "date": "2026-07-23",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Paper trading tools"
+    },
+    {
+      "id": "demo_tx_019",
+      "type": "expense",
+      "amount": 28.4,
+      "name": "Urban Threads",
+      "date": "2026-07-25",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Casual sneakers"
+    },
+    {
+      "id": "demo_tx_020",
+      "type": "expense",
+      "amount": 38.6,
+      "name": "Fresh Fields Superstore",
+      "date": "2026-07-27",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Mid-month top-up"
+    },
+    {
+      "id": "demo_tx_021",
+      "type": "income",
+      "amount": 2100.0,
+      "name": "Freelance retainer — Studio Nova",
+      "date": "2026-06-01",
+      "category": "Salary",
+      "isNecessary": true,
+      "notes": "Monthly client payment"
+    },
+    {
+      "id": "demo_tx_022",
+      "type": "expense",
+      "amount": 52.3,
+      "name": "Green Basket Market",
+      "date": "2026-06-03",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Groceries"
+    },
+    {
+      "id": "demo_tx_023",
+      "type": "expense",
+      "amount": 34.5,
+      "name": "MetroLine Transit",
+      "date": "2026-06-05",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Monthly travel bundle"
+    },
+    {
+      "id": "demo_tx_024",
+      "type": "expense",
+      "amount": 89.99,
+      "name": "AudioWave Headphones",
+      "date": "2026-06-07",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Impulse buy"
+    },
+    {
+      "id": "demo_tx_025",
+      "type": "expense",
+      "amount": 22.0,
+      "name": "CloudHost Pro",
+      "date": "2026-06-11",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Homelab hosting"
+    },
+    {
+      "id": "demo_tx_026",
+      "type": "expense",
+      "amount": 41.5,
+      "name": "Corner Café",
+      "date": "2026-06-14",
+      "category": "Food",
+      "isNecessary": false,
+      "notes": "Catch-up coffee"
+    },
+    {
+      "id": "demo_tx_027",
+      "type": "income",
+      "amount": 280.0,
+      "name": "Workshop honorarium",
+      "date": "2026-06-18",
+      "category": "Side Gig",
+      "isNecessary": true,
+      "notes": "Guest lecture"
+    },
+    {
+      "id": "demo_tx_028",
+      "type": "expense",
+      "amount": 15.8,
+      "name": "CityRide Bike Share",
+      "date": "2026-06-20",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Weekend rides"
+    },
+    {
+      "id": "demo_tx_029",
+      "type": "expense",
+      "amount": 63.4,
+      "name": "Fresh Fields Superstore",
+      "date": "2026-06-22",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Bulk shop"
+    },
+    {
+      "id": "demo_tx_030",
+      "type": "expense",
+      "amount": 47.0,
+      "name": "PrintLab Supplies",
+      "date": "2026-06-25",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Project materials"
+    },
+    {
+      "id": "demo_tx_031",
+      "type": "income",
+      "amount": 2050.0,
+      "name": "Freelance retainer — Studio Nova",
+      "date": "2026-05-01",
+      "category": "Salary",
+      "isNecessary": true,
+      "notes": "Monthly client payment"
+    },
+    {
+      "id": "demo_tx_032",
+      "type": "expense",
+      "amount": 48.9,
+      "name": "Green Basket Market",
+      "date": "2026-05-04",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Groceries"
+    },
+    {
+      "id": "demo_tx_033",
+      "type": "expense",
+      "amount": 34.5,
+      "name": "MetroLine Transit",
+      "date": "2026-05-06",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Monthly travel bundle"
+    },
+    {
+      "id": "demo_tx_034",
+      "type": "expense",
+      "amount": 120.0,
+      "name": "DeskCraft Store",
+      "date": "2026-05-09",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Monitor arm"
+    },
+    {
+      "id": "demo_tx_035",
+      "type": "expense",
+      "amount": 22.0,
+      "name": "CloudHost Pro",
+      "date": "2026-05-11",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Homelab hosting"
+    },
+    {
+      "id": "demo_tx_036",
+      "type": "expense",
+      "amount": 36.2,
+      "name": "Lunch Box Deli",
+      "date": "2026-05-15",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Work lunches"
+    },
+    {
+      "id": "demo_tx_037",
+      "type": "income",
+      "amount": 150.0,
+      "name": "Birthday gift",
+      "date": "2026-05-18",
+      "category": "Gift",
+      "isNecessary": true,
+      "notes": "From family"
+    },
+    {
+      "id": "demo_tx_038",
+      "type": "expense",
+      "amount": 59.99,
+      "name": "StreamBox Plus",
+      "date": "2026-05-20",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Annual plan upgrade"
+    },
+    {
+      "id": "demo_tx_039",
+      "type": "expense",
+      "amount": 71.5,
+      "name": "Fresh Fields Superstore",
+      "date": "2026-05-24",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Bulk shop"
+    },
+    {
+      "id": "demo_tx_040",
+      "type": "expense",
+      "amount": 18.0,
+      "name": "CityRide Bike Share",
+      "date": "2026-05-28",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Commute backup"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "demo_sub_001",
+      "name": "StreamBox Plus",
+      "cost": 14.99,
+      "cycle": "monthly",
+      "category": "Entertainment",
+      "nextRenewal": "2026-08-07",
+      "active": true
+    },
+    {
+      "id": "demo_sub_002",
+      "name": "CloudHost Pro",
+      "cost": 24.0,
+      "cycle": "monthly",
+      "category": "Software",
+      "nextRenewal": "2026-08-11",
+      "active": true
+    },
+    {
+      "id": "demo_sub_003",
+      "name": "FocusMusic Premium",
+      "cost": 9.99,
+      "cycle": "monthly",
+      "category": "Entertainment",
+      "nextRenewal": "2026-08-03",
+      "active": true
+    },
+    {
+      "id": "demo_sub_004",
+      "name": "TradeDesk Monthly",
+      "cost": 72.0,
+      "cycle": "monthly",
+      "category": "Software",
+      "nextRenewal": "2026-08-23",
+      "active": false
+    }
+  ]
+}

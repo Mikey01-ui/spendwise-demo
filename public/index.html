@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>SpendWise — Personal Finance Tracker</title>
+  <meta name="description" content="Personal finance tracker">
+  <meta name="theme-color" content="#D6FF1F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SpendWise">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css?v=2026072919">
+</head>
+<body>
+
+  <!-- ==================== LOGIN SCREEN ==================== -->
+  <div id="login-container" class="auth-screen">
+    <!-- Fullscreen Video Background -->
+    <video autoplay muted loop playsinline id="login-bg-video">
+      <source src="login-bg.mp4" type="video/mp4">
+    </video>
+    
+    <div class="auth-card-clean">
+      <div class="auth-header-clean">
+        <span class="auth-subtitle">WELCOME BACK</span>
+        <h1 class="auth-title">Sign in to your account</h1>
+      </div>
+      <form id="login-form">
+        <div class="input-group-clean">
+          <input type="email" id="email" placeholder="Email address" value="miltomy1@gmail.com" required>
+        </div>
+        <div class="input-group-clean password-wrapper">
+          <input type="password" id="password" placeholder="Password" value="Saikik1234^" required>
+          <button type="button" id="toggle-password-visibility" class="btn-toggle-pw">
+            <i data-lucide="eye"></i>
+          </button>
+        </div>
+        <div class="form-actions-clean">
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+        <div id="login-error" class="error-msg hidden">
+          <i data-lucide="alert-circle"></i>
+          <span>Incorrect email or password.</span>
+        </div>
+        <button type="submit" class="btn-submit-clean">SIGN IN</button>
+        <div class="auth-footer-clean">
+          Don't have an account? <a href="#" class="register-link">Register here</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN APPLICATION ==================== -->
+  <div id="app-container" class="app-layout hidden">
+    <div id="demo-banner" class="demo-banner hidden" role="status">
+      Demo mode — sample data only. Nothing is saved.
+    </div>
+    
+    <!-- Sidebar Navigation (Desktop) -->
+    <aside class="sidebar" id="app-sidebar">
+      <button id="sidebar-collapse-btn" class="sidebar-collapse-toggle">
+        <i data-lucide="chevron-left"></i>
+      </button>
+      <div class="sidebar-brand">
+        <span>SpendWise</span>
+      </div>
+      <nav class="sidebar-menu">
+        <button class="nav-item active" data-tab="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="transactions">
+          <i data-lucide="arrow-left-right"></i>
+          <span>Transactions</span>
+        </button>
+        <button class="nav-item" data-tab="subscriptions">
+          <i data-lucide="refresh-cw"></i>
+          <span>Subscriptions</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <i data-lucide="sliders"></i>
+          <span>Budget & Tools</span>
+        </button>
+        <button class="nav-item" data-tab="notifications">
+          <i data-lucide="bell"></i>
+          <span>Notifications</span>
+        </button>
+        <button class="nav-item" data-tab="general-settings">
+          <i data-lucide="settings"></i>
+          <span>Settings</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="theme-toggle-btn" class="btn-theme-toggle" type="button">
+          <i data-lucide="moon" id="theme-toggle-icon"></i>
+          <span>Dark Mode</span>
+        </button>
+        <button id="logout-btn" class="btn-logout">
+          <i data-lucide="log-out"></i>
+          <span>Lock Vault</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+      <div class="brand">
+        <i data-lucide="wallet"></i>
+        <span>SpendWise</span>
+      </div>
+      <div class="mobile-header-actions">
+        <button id="mobile-refresh-btn" class="mobile-header-btn" type="button" aria-label="Refresh">
+          <i data-lucide="refresh-cw"></i>
+        </button>
+        <button id="mobile-logout-btn" class="mobile-logout mobile-header-btn" type="button" aria-label="Lock vault">
+          <i data-lucide="log-out"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- ==================== TAB: DASHBOARD ==================== -->
+      <section id="tab-dashboard" class="tab-pane active">
+        <div class="pane-header">
+          <div>
+            <h1>Dashboard</h1>
+            <p id="dashboard-date-greeting">Good afternoon Milton!</p>
+          </div>
+          <div class="header-actions">
+            <button type="button" class="month-picker-trigger" id="dashboard-month-picker-btn" aria-label="Select month">
+              <i data-lucide="calendar"></i>
+              <span id="dashboard-month-picker-label">Aug 2026</span>
+              <i data-lucide="chevron-down" class="month-picker-chevron"></i>
+            </button>
+            <button class="btn-primary btn-add-tx-trigger" type="button">
+              <i data-lucide="plus"></i>
+              <span>Add Transaction</span>
+            </button>
+            <button class="btn-settings-header" id="mobile-settings-btn" type="button">
+              <i data-lucide="settings"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- REDESIGNED TWO-COLUMN GRID LAYOUT -->
+        <div class="dashboard-grid">
+          
+          <!-- LEFT / MAIN COLUMN -->
+          <div class="dashboard-main-column">
+            
+            <!-- Latest Transaction Banner Strip -->
+            <div id="latest-tx-banner" class="latest-tx-banner"></div>
+            
+            <!-- Top Section Row (Balanced Height Column Grid) -->
+            <div class="top-row-grid">
+              <!-- Card 1: Total Balance -->
+              <div class="metric-card balance">
+                <div class="metric-header-mini">
+                  <span class="metric-label">Total Balance</span>
+                  <div class="metric-icon-circle"><i data-lucide="wallet"></i></div>
+                </div>
+                <h1 class="metric-value" id="metric-total-balance">$0.00</h1>
+                <div class="metric-trend" id="metric-net-savings-rate">
+                  <span>All assets combined</span>
+                </div>
+              </div>
+              
+              <!-- Card 2: Monthly Income -->
+              <div class="metric-card income">
+                <div class="metric-header-mini">
+                  <span class="metric-label">Income (Month)</span>
+                  <div class="metric-icon-circle"><i data-lucide="trending-up"></i></div>
+                </div>
+                <h1 class="metric-value" id="metric-month-income">$0.00</h1>
+                <div class="metric-trend" id="metric-income-count">
+                  <span>0 deposits logged</span>
+                </div>
+              </div>
+              
+              <!-- Card 3: Monthly Expenses -->
+              <div class="metric-card expenses">
+                <div class="metric-header-mini">
+                  <span class="metric-label">Expenses (Month)</span>
+                  <div class="metric-icon-circle"><i data-lucide="trending-down"></i></div>
+                </div>
+                <h1 class="metric-value" id="metric-month-expense">$0.00</h1>
+                <div class="metric-trend" id="metric-expense-ratio">
+                  <span>0% necessary spend</span>
+                </div>
+              </div>
+
+              <!-- Card 4: Net Savings Hero Card (Moved from right rail) -->
+              <div class="dark-hero-card">
+                <div class="hero-header">
+                  <span>THIS MONTH'S NET SAVINGS</span>
+                  <div class="metric-icon-circle"><i data-lucide="receipt"></i></div>
+                </div>
+                <div class="hero-body-content">
+                  <h1 class="hero-balance" id="hero-net-savings">$0.00</h1>
+                  <div class="hero-badge-row">
+                    <span class="hero-percentage-badge" id="hero-savings-rate">+0% Savings Rate</span>
+                  </div>
+                </div>
+                <div class="hero-buttons">
+                  <button class="btn-hero-primary btn-add-tx-trigger-income" type="button">
+                    <i data-lucide="plus"></i> 
+                    <span>Add Income</span>
+                  </button>
+                  <button class="btn-hero-secondary btn-add-tx-trigger-expense" type="button">
+                    <i data-lucide="minus"></i> 
+                    <span>Log Expense</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 2: Impulse Spending Meter & Categories Donut -->
+            <div class="widgets-row">
+              <!-- Impulse Spending Dial Widget -->
+              <div class="widget-card impulse-meter-card-new">
+                <div class="widget-header-new">
+                  <h2>Impulse Spending Meter</h2>
+                  <i data-lucide="alert-triangle"></i>
+                </div>
+                <div class="widget-body-new flex-center">
+                  <div class="progress-ring-container">
+                    <svg class="progress-ring" width="120" height="120">
+                      <circle class="progress-ring-track" cx="60" cy="60" r="50" stroke-width="10" fill="transparent"/>
+                      <circle class="progress-ring-fill" id="impulse-ring-fill" cx="60" cy="60" r="50" stroke-width="10" fill="transparent" stroke-dasharray="314.16" stroke-dashoffset="314.16"/>
+                    </svg>
+                    <div class="ring-label-center">
+                      <span id="impulse-percentage">0%</span>
+                      <label>Wants</label>
+                    </div>
+                  </div>
+                  <div class="impulse-stats-new">
+                    <div class="impulse-stat-pill want-pill">
+                      <span class="color-dot want-dot"></span>
+                      <span>Wants:</span>
+                      <strong id="impulse-wants-amount">$0.00</strong>
+                    </div>
+                    <div class="impulse-stat-pill need-pill">
+                      <span class="color-dot need-dot"></span>
+                      <span>Needs:</span>
+                      <strong id="impulse-needs-amount">$0.00</strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="impulse-advice-banner" id="impulse-advice-text">
+                  All spending this month has been necessary. Great job!
+                </div>
+              </div>
+
+              <!-- Spending Breakdown Card -->
+              <div class="widget-card categories-card-new dark-hero-card">
+                <div class="widget-header-new">
+                  <h2>Spending Breakdown</h2>
+                  <i data-lucide="pie-chart"></i>
+                </div>
+                <div class="widget-body-new chart-legend-layout">
+                  <div class="chart-wrapper-mini">
+                    <canvas id="categoryChart"></canvas>
+                    <div class="chart-center-stack">
+                      <div id="chart-center-label" class="chart-center-label">Total</div>
+                      <div id="chart-center-value" class="chart-center-value"></div>
+                    </div>
+                    <div id="chart-placeholder" class="chart-placeholder hidden">
+                      <i data-lucide="help-circle"></i>
+                      <p>No data</p>
+                    </div>
+                  </div>
+                  <div class="category-legend-list" id="category-legend-list-container">
+                    <!-- Dynamic list items -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 3: Income vs Expense Trend Chart -->
+            <div class="widget-card trend-chart-card">
+              <div class="widget-header-new trend-chart-header">
+                <div class="trend-chart-header-top">
+                  <h2>
+                    <span class="trend-title-long">Income vs Expense Trend</span>
+                    <span class="trend-title-short">Income vs Expense</span>
+                  </h2>
+                  <div class="chart-icon-buttons">
+                    <button id="btn-chart-calendar" class="chart-action-btn" type="button"><i data-lucide="calendar"></i></button>
+                    <button class="chart-action-btn" type="button"><i data-lucide="bar-chart-2"></i></button>
+                  </div>
+                </div>
+                <div class="chart-legend-labels">
+                  <span class="legend-indicator income"></span><label>Income</label>
+                  <span class="legend-indicator expense"></span><label>Expense</label>
+                </div>
+              </div>
+              <div class="widget-body-new trend-chart-body">
+                <canvas id="trendChart"></canvas>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN / RAIL -->
+          <div class="dashboard-right-rail">
+
+            <!-- Recent Activity Widget -->
+            <div class="right-rail-card recent-activity-card">
+              <div class="widget-header-new">
+                <h2>Recent Activity</h2>
+                <button class="btn-icon-more btn-view-all-tx" type="button"><i data-lucide="more-horizontal"></i></button>
+              </div>
+              <div class="avatar-bubble-row" id="overlapping-bubbles-container">
+                <!-- Circular bubbles + floating trigger button -->
+              </div>
+              <div class="activity-feed-list" id="dashboard-tx-list-new">
+                <!-- Dynamically populated 5 activity rows -->
+              </div>
+            </div>
+
+            <!-- Category Budgets Widget -->
+            <div class="right-rail-card budgets-list-card">
+              <div class="widget-header-new">
+                <h2>Category Budgets</h2>
+                <i data-lucide="sliders"></i>
+              </div>
+              <div class="budgets-progress-list" id="dashboard-budgets-list">
+                <!-- Dynamic progress rows -->
+              </div>
+            </div>
+
+            <!-- Upcoming Subscriptions renewals -->
+            <div class="right-rail-card renewals-list-card">
+              <div class="widget-header-new">
+                <h2>Upcoming Renewals</h2>
+                <i data-lucide="refresh-cw"></i>
+              </div>
+              <div class="renewals-compact-list" id="dashboard-renewals-list">
+                <!-- Dynamic renewals rows -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==================== TAB: TRANSACTIONS ==================== -->
+      <section id="tab-transactions" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h1>Transactions</h1>
+            <p>Log and filter your income and expenses.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn-primary btn-add-tx-trigger" type="button">
+              <i data-lucide="plus"></i>
+              <span>Add Transaction</span>
+            </button>
+            <button class="btn-settings-header btn-download-header" id="tx-download-btn" type="button">
+              <i data-lucide="download"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile-only Filter Toolbar Trigger Buttons -->
+        <div class="mobile-filter-toolbar">
+          <button type="button" class="mobile-filter-btn" id="btn-trigger-mobile-filter">
+            <span id="txt-mobile-filter-category">All Categories</span>
+            <i data-lucide="filter" style="width: 14px; height: 14px;"></i>
+          </button>
+          <div class="filter-vertical-divider"></div>
+          <button type="button" class="mobile-filter-btn" id="btn-trigger-mobile-status">
+            <span id="txt-mobile-filter-status">All Status</span>
+            <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+          </button>
+        </div>
+
+        <!-- Filters Toolbar -->
+        <div class="toolbar" style="margin-bottom: 24px;">
+          <div class="search-box">
+            <i data-lucide="search"></i>
+            <input type="text" id="tx-search-input" placeholder="Search merchant, notes...">
+          </div>
+          <div class="filter-options" style="display: flex; gap: 12px;">
+            <select id="tx-filter-category">
+              <option value="all">All Categories</option>
+              <!-- Populated dynamically -->
+            </select>
+            <select id="tx-filter-type">
+              <option value="all">All Status</option>
+              <option value="income">Income</option>
+              <option value="expense">Expenses</option>
+              <option value="necessary">Necessary Needs</option>
+              <option value="unnecessary">Impulse Wants</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Mobile Specific Month & In/Out Flow Summary -->
+        <div class="tx-month-summary">
+          <div class="summary-left">
+            <div class="month-selector" id="month-selector-btn" role="button" tabindex="0" aria-label="Select month">
+              <span>Aug</span>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="in-out-flow">
+              <span>In <span id="summary-in-val" class="flow-val flow-in">$0.00</span></span>
+              <span style="margin: 0 4px; opacity: 0.3;">|</span>
+              <span>Out <span id="summary-out-val" class="flow-val flow-out">$0.00</span></span>
+            </div>
+          </div>
+          <div class="summary-right">
+            <span class="overview-badge">
+              <i data-lucide="database"></i>
+              <span>Monthly Overview</span>
+            </span>
+          </div>
+        </div>
+
+         <!-- Detailed Transaction Table / Feed -->
+        <div class="widget-card" id="tx-list-card">
+          <table class="data-table">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--border-color); text-align: left;">
+                <th style="padding: 12px 10px;"></th>
+                <th style="padding: 12px 10px;">Date</th>
+                <th style="padding: 12px 10px;">Name / Merchant</th>
+                <th style="padding: 12px 10px;">Category</th>
+                <th style="padding: 12px 10px;">Type / Priority</th>
+                <th style="padding: 12px 10px;" class="text-right">Amount</th>
+                <th style="padding: 12px 10px;" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody id="tx-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+          
+          <!-- Mobile Specific Transaction List Feed -->
+          <div id="tx-mobile-list" class="mobile-tx-feed hidden">
+            <!-- Dynamically populated rows -->
+          </div>
+          
+          <div id="tx-empty-state" class="empty-state hidden" style="padding: 40px 10px; text-align: center;">
+            <i data-lucide="inbox" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px; display: inline-block;"></i>
+            <h3>No transactions found</h3>
+            <p>Try resetting filters or log a new transaction to start.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB: SUBSCRIPTIONS ==================== -->
+      <section id="tab-subscriptions" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h1>Subscriptions</h1>
+            <p>Monitor monthly drains on domain names, streaming services, and VPNs.</p>
+          </div>
+          <button class="btn-primary" id="btn-add-sub-trigger">
+            <i data-lucide="plus"></i>
+            <span>Add Subscription</span>
+          </button>
+        </div>
+
+        <!-- Stat metrics grid for subscriptions -->
+        <div class="subscription-metrics-grid">
+          <!-- Card 1: Monthly Commitment -->
+          <div class="metric-card dark-hero-card">
+            <div class="hero-header">
+              <span class="hero-label">Monthly Commitment</span>
+              <div class="metric-icon-circle"><i data-lucide="refresh-cw"></i></div>
+            </div>
+            <h1 class="hero-balance" id="sub-metric-monthly">$0.00</h1>
+            <div class="hero-trend">
+              <span>Monthly recurring drainage</span>
+            </div>
+          </div>
+          
+          <!-- Card 2: Annual Cost -->
+          <div class="metric-card annual-cost">
+            <div class="metric-header-mini">
+              <span class="metric-label">Annual Cost</span>
+              <div class="metric-icon-circle"><i data-lucide="calendar"></i></div>
+            </div>
+            <h1 class="metric-value" id="sub-metric-yearly">$0.00</h1>
+            <div class="metric-trend">
+              <span>Annual recurring drainage</span>
+            </div>
+          </div>
+          
+          <!-- Card 3: Active Subs Count -->
+          <div class="metric-card active-subs-count">
+            <div class="metric-header-mini">
+              <span class="metric-label">Active Subs</span>
+              <div class="metric-icon-circle"><i data-lucide="shield-check"></i></div>
+            </div>
+            <h1 class="metric-value" id="sub-metric-count">0</h1>
+            <div class="metric-trend">
+              <span>Tracked subscriptions</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subscriptions List Container -->
+        <div class="widget-card" style="margin-top: 24px; padding: 16px;">
+          <div class="category-legend-list" id="subscriptions-list-container">
+            <!-- Dynamically populated list rows -->
+          </div>
+          <div id="sub-empty-state" class="empty-state hidden" style="padding: 40px 10px; text-align: center;">
+            <i data-lucide="shield-alert" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px; display: inline-block;"></i>
+            <h3>No recurring subscriptions tracked</h3>
+            <p>Add subscriptions to see upcoming billing dates and monthly commitments.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB: BUDGET & SETTINGS ==================== -->
+      <section id="tab-settings" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h1>Budget & Tools</h1>
+            <p>Set custom allowances and check purchases against hourly work wages.</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <!-- Category Budgets Config Card -->
+          <div class="widget-card budget-config-card">
+            <div class="widget-header-new">
+              <h2>Category Budgets</h2>
+              <i data-lucide="piggy-bank"></i>
+            </div>
+            <div class="card-body" style="margin-top: 12px;">
+              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4; margin-bottom: 16px;">Set monthly caps for specific categories. We'll show alerts when you near these limits.</p>
+              <form id="budget-settings-form">
+                <div class="category-legend-list" id="budget-inputs-container">
+                  <!-- Dynamically populated with categories -->
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; height: 36px; font-weight: 700; margin-top: 16px; cursor: pointer;">Save Monthly Budgets</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Hourly Wage Calculator Widget -->
+          <div class="widget-card tool-card">
+            <div class="widget-header-new">
+              <h2>"Is it Worth it?" Calculator</h2>
+              <i data-lucide="clock"></i>
+            </div>
+            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
+              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Enter the cost of an item you want to buy to see how many hours of work it represents based on your wage.</p>
+              
+              <div class="wage-calculator-inputs" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="input-group">
+                  <label for="calc-item-cost">Item Cost ($)</label>
+                  <input type="number" id="calc-item-cost" placeholder="e.g. 60" min="0" step="0.01" style="width: 100%;">
+                </div>
+                <div class="input-group">
+                  <label for="calc-hourly-wage">Your Hourly Wage ($/hr)</label>
+                  <input type="number" id="calc-hourly-wage" placeholder="e.g. 15" min="0.1" step="0.01" style="width: 100%;">
+                </div>
+              </div>
+
+              <div id="calculator-result" class="calculator-result hidden">
+                <div class="result-number" style="font-size: 1.8rem; font-weight: 800; color: var(--color-green);"><span id="result-hours">0.0</span> hrs</div>
+                <p class="result-text" style="font-size: 0.85rem; color: var(--text-primary); margin-top: 6px;">You need to work approximately <strong id="result-hours-bold" style="color: var(--color-green);">0 hours</strong> to pay for this item.</p>
+              </div>
+              <button id="btn-save-wage" class="btn-secondary" style="width: 100%; height: 36px; font-weight: 700;">Update Saved Hourly Wage</button>
+            </div>
+          </div>
+
+          <!-- Backup & Recovery Card -->
+          <div class="widget-card backup-card">
+            <div class="widget-header-new">
+              <h2>Homelab Data Management</h2>
+              <i data-lucide="database"></i>
+            </div>
+            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 14px;">
+              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Safeguard your local-first financial vault. Manage backups or restore data from a previous export file.</p>
+              
+              <!-- Rich database stats panel -->
+              <div class="database-stats-box" style="background-color: var(--bg-surface-hover); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary);">
+                  <span>Database Connection</span>
+                  <span style="color: var(--color-green); font-weight: 700;">LOCAL VAULT</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary);">
+                  <span>Total Saved Entries</span>
+                  <span id="stats-total-entries" style="font-weight: 700; color: var(--text-primary);">0 records</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary);">
+                  <span>Last Automated Export</span>
+                  <span style="font-weight: 700; color: var(--text-primary);">Just now</span>
+                </div>
+              </div>
+
+              <div class="backup-actions" style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="btn-export-backup" class="btn-secondary" style="width: 100%; height: 38px; font-weight: 700;">
+                  <i data-lucide="download" style="width: 15px; height: 15px; margin-right: 6px; display: inline-block; vertical-align: middle;"></i>
+                  <span>Export JSON Backup</span>
+                </button>
+                <div class="import-wrapper" data-demo-hide>
+                  <label for="import-file-input" class="btn-secondary" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 38px; font-weight: 700; cursor: pointer; box-sizing: border-box;">
+                    <i data-lucide="upload" style="width: 15px; height: 15px; margin-right: 6px;"></i>
+                    <span>Import JSON Backup</span>
+                  </label>
+                  <input type="file" id="import-file-input" class="hidden" accept=".json">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB: NOTIFICATIONS ==================== -->
+      <section id="tab-notifications" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h1>Notifications</h1>
+            <p>Stay informed about your financial health, renewals, and budgets.</p>
+          </div>
+        </div>
+        <div class="widget-card" style="padding: 16px;" id="notifications-body-card">
+          <!-- Dynamically populated notifications list -->
+        </div>
+
+        <!-- Notification Preferences Card -->
+        <div class="widget-card" style="margin-top: 24px; padding: 16px;">
+          <div class="widget-header-new" style="justify-content: flex-start !important; gap: 8px !important;">
+            <h2>Notification Preferences</h2>
+            <i data-lucide="sliders" style="width: 18px; height: 18px; color: var(--text-secondary);"></i>
+          </div>
+          <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 14px;">
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Configure when SpendWise should trigger alerts and warning notifications.</p>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; cursor: pointer; color: var(--text-primary);">
+                <input type="checkbox" checked style="width: 16px !important; height: 16px !important; margin: 0 !important;">
+                <span>Category Budget Threshold (Warn at 80% capacity)</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; cursor: pointer; color: var(--text-primary);">
+                <input type="checkbox" checked style="width: 16px !important; height: 16px !important; margin: 0 !important;">
+                <span>Subscription Renewals (Remind 7 days before billing)</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; cursor: pointer; color: var(--text-primary);">
+                <input type="checkbox" checked style="width: 16px !important; height: 16px !important; margin: 0 !important;">
+                <span>Impulse Spending Alerts (Flag when wants exceed 40% of budget)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB: GENERAL SETTINGS ==================== -->
+      <section id="tab-general-settings" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h1>Settings</h1>
+            <p>Manage application preferences, profile status, and visual configurations.</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <!-- Card 1: Profile Settings -->
+          <div class="widget-card">
+            <div class="widget-header-new">
+              <h2>Profile Settings</h2>
+              <i data-lucide="user"></i>
+            </div>
+            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
+              <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" value="miltomy1@gmail.com" readonly style="opacity: 0.8; cursor: not-allowed; width: 100%;">
+              </div>
+              <div class="input-group">
+                <label>Base Currency</label>
+                <select disabled style="opacity: 0.8; cursor: not-allowed; width: 100%;">
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Visual Preferences -->
+          <div class="widget-card">
+            <div class="widget-header-new">
+              <h2>Visual Preferences</h2>
+              <i data-lucide="palette"></i>
+            </div>
+            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
+              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Switch between light and dark themes manually.</p>
+              <button id="settings-theme-toggle" class="btn-primary" type="button" style="width: 100%; height: 36px; font-weight: 700; cursor: pointer;">
+                Toggle Theme Mode
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: Data Management -->
+          <div class="widget-card">
+            <div class="widget-header-new">
+              <h2>Data Management</h2>
+              <i data-lucide="database"></i>
+            </div>
+            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
+              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Safeguard your data by exporting backups or restoring previous database files.</p>
+              <button id="btn-export-backup-settings" class="btn-secondary" style="width: 100%; height: 36px; font-weight: 700;">
+                <i data-lucide="download" style="width: 15px; height: 15px; margin-right: 6px; display: inline-block; vertical-align: middle;"></i>Export Backup
+              </button>
+              <div class="import-wrapper" data-demo-hide>
+                <label for="import-file-input-settings" class="btn-secondary" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 36px; font-weight: 700; cursor: pointer; box-sizing: border-box;">
+                  <i data-lucide="upload" style="width: 15px; height: 15px; margin-right: 6px;"></i>Import Backup
+                </label>
+                <input type="file" id="import-file-input-settings" class="hidden" accept=".json">
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Account Actions -->
+          <div class="widget-card">
+            <div class="widget-header-new">
+              <h2>Account Actions</h2>
+              <i data-lucide="shield"></i>
+            </div>
+            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
+              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Sign out of your account or lock the current session.</p>
+              <button id="btn-logout-settings" class="btn-secondary" style="width: 100%; height: 36px; font-weight: 700; color: #EF4444; border-color: rgba(239, 68, 68, 0.25);">
+                <i data-lucide="log-out" style="width: 15px; height: 15px; margin-right: 6px; display: inline-block; vertical-align: middle;"></i>Lock Vault
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 5: System Information -->
+          <div class="widget-card">
+            <div class="widget-header-new">
+              <h2>System Information</h2>
+              <i data-lucide="info"></i>
+            </div>
+            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
+              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">SpendWise Vault Client: <strong>v2.4.0-release</strong></p>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Database Status: <span style="color: var(--color-green); font-weight: 700;">CONNECTED</span></p>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Encryption Algorithm: <strong>AES-GCM-256</strong></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Navigation (Mobile Views) -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-tab="dashboard">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" data-tab="transactions">
+        <i data-lucide="arrow-left-right"></i>
+        <span>History</span>
+      </button>
+      <button class="nav-item" data-tab="subscriptions">
+        <i data-lucide="refresh-cw"></i>
+        <span>Subs</span>
+      </button>
+      <button class="nav-item" data-tab="settings">
+        <i data-lucide="sliders"></i>
+        <span>Tools</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- ==================== MODAL: ADD TRANSACTION ==================== -->
+  <div id="tx-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-tx-title">Add Transaction</h2>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <!-- Toggle Switch -->
+        <div class="tx-toggle">
+          <button type="button" class="toggle-btn active" id="toggle-expense" data-type="expense">Expense</button>
+          <button type="button" class="toggle-btn" id="toggle-income" data-type="income">Income</button>
+        </div>
+
+        <form id="tx-form">
+          <!-- Common Fields -->
+          <div class="input-group">
+            <label for="tx-amount" id="label-tx-amount">Amount (€)</label>
+            <input type="number" id="tx-amount" placeholder="0.00" step="0.01" min="0.01" required>
+          </div>
+
+          <div class="input-group">
+            <label for="tx-name" id="label-tx-name">Merchant / Description</label>
+            <input type="text" id="tx-name" placeholder="e.g. McDonald's or Side Gig" required>
+          </div>
+
+          <div class="input-group">
+            <label for="tx-date">Date</label>
+            <input type="date" id="tx-date" required>
+          </div>
+
+          <div class="input-group">
+            <label for="tx-category">Category</label>
+            <select id="tx-category" required>
+              <!-- Populate based on type -->
+            </select>
+          </div>
+
+          <!-- Expense Specific Fields -->
+          <div class="input-group" id="group-necessity">
+            <label class="checkbox-label">
+              <input type="checkbox" id="tx-necessary" checked>
+              <span class="custom-checkbox"></span>
+              <div class="checkbox-text">
+                <strong>Necessary Expense (Need)</strong>
+                <p>Uncheck if this is an unnecessary impulse buy/want.</p>
+              </div>
+            </label>
+          </div>
+
+          <div class="input-group">
+            <label for="tx-notes">Notes (Optional)</label>
+            <textarea id="tx-notes" rows="2" placeholder="Write additional context here..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary full-width">Save Transaction</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: ADD/EDIT SUBSCRIPTION ==================== -->
+  <div id="sub-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-sub-title">Add Subscription</h2>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="sub-form">
+          <input type="hidden" id="sub-id">
+          
+          <div class="input-group">
+            <label for="sub-name">Subscription Name</label>
+            <input type="text" id="sub-name" placeholder="e.g. Netflix, VPS Server" required>
+          </div>
+
+          <div class="input-group">
+            <label for="sub-cost">Cost ($)</label>
+            <input type="number" id="sub-cost" placeholder="0.00" step="0.01" min="0.01" required>
+          </div>
+
+          <div class="input-group">
+            <label for="sub-cycle">Billing Cycle</label>
+            <select id="sub-cycle" required>
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="sub-category">Category</label>
+            <select id="sub-category" required>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Homelab">Homelab</option>
+              <option value="Utilities">Utilities</option>
+              <option value="School">School / Work</option>
+              <option value="Miscellaneous">Miscellaneous</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="sub-next-renewal">Next Renewal Date</label>
+            <input type="date" id="sub-next-renewal" required>
+          </div>
+
+          <div class="input-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="sub-active" checked>
+              <span class="custom-checkbox"></span>
+              <div class="checkbox-text">
+                <strong>Active Subscription</strong>
+                <p>Inactive subscriptions won't count towards monthly commitment totals.</p>
+              </div>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-primary full-width">Save Subscription</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CUSTOM FILTER BOTTOM SHEET ==================== -->
+  <div id="filter-bottom-sheet" class="filter-sheet hidden">
+    <div class="sheet-backdrop" id="filter-sheet-backdrop"></div>
+    <div class="sheet-container">
+      <div class="sheet-header">
+        <h2>Filter Transactions</h2>
+        <button id="btn-close-filter-sheet" class="btn-close-sheet" type="button">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="sheet-body">
+        
+        <!-- Section 1: Money Flow -->
+        <div class="filter-section">
+          <h3>Money Flow</h3>
+          <div class="tag-group" id="filter-group-flow">
+            <button type="button" class="filter-tag active" data-value="all">All</button>
+            <button type="button" class="filter-tag" data-value="income">Money In</button>
+            <button type="button" class="filter-tag" data-value="expense">Money Out</button>
+          </div>
+        </div>
+
+        <!-- Section 2: Payment Type -->
+        <div class="filter-section">
+          <h3>Payment Type</h3>
+          <div class="tag-group" id="filter-group-priority">
+            <button type="button" class="filter-tag active" data-value="all">All Categories</button>
+            <button type="button" class="filter-tag" data-value="necessary">Needs (Necessary)</button>
+            <button type="button" class="filter-tag" data-value="unnecessary">Wants (Impulse)</button>
+          </div>
+        </div>
+
+        <!-- Section 3: Categories -->
+        <div class="filter-section">
+          <h3>Category</h3>
+          <div class="tag-group" id="filter-group-category">
+            <button type="button" class="filter-tag active" data-value="all">All Categories</button>
+            <!-- Populated dynamically in app.js -->
+          </div>
+        </div>
+
+      </div>
+      <div class="sheet-footer">
+        <button type="button" class="btn-sheet-cancel" id="btn-cancel-filter">Cancel</button>
+        <button type="button" class="btn-sheet-confirm" id="btn-confirm-filter">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MONTH PICKER BOTTOM SHEET ==================== -->
+  <div id="month-picker-sheet" class="filter-sheet hidden">
+    <div class="sheet-backdrop" id="month-picker-backdrop"></div>
+    <div class="sheet-container">
+      <div class="sheet-header">
+        <h2>Select Month</h2>
+        <button id="btn-close-month-picker" class="btn-close-sheet" type="button">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="sheet-body month-picker-body">
+        <div class="month-picker-nav">
+          <button type="button" class="month-picker-arrow" id="btn-month-prev" aria-label="Previous month">
+            <i data-lucide="chevron-left"></i>
+          </button>
+          <div class="month-picker-display" id="month-picker-display">August 2026</div>
+          <button type="button" class="month-picker-arrow" id="btn-month-next" aria-label="Next month">
+            <i data-lucide="chevron-right"></i>
+          </button>
+        </div>
+        <button type="button" class="btn-secondary month-picker-jump hidden" id="btn-jump-current-month">
+          Jump to current month
+        </button>
+        <div class="month-picker-actions">
+          <button type="button" class="btn-sheet-cancel" id="btn-cancel-month-picker">Cancel</button>
+          <button type="button" class="btn-sheet-confirm" id="btn-confirm-month-picker">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CHART CALENDAR BOTTOM SHEET ==================== -->
+  <div id="chart-calendar-modal" class="filter-sheet hidden">
+    <div class="sheet-backdrop" id="chart-calendar-backdrop"></div>
+    <div class="sheet-container">
+      <div class="sheet-header">
+        <h2>Select Custom Date Range</h2>
+        <button id="btn-close-calendar-modal" class="btn-close-sheet" type="button">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="sheet-body" style="padding: 20px !important;">
+        <form id="chart-calendar-form" style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="input-group">
+            <label for="chart-start-date" style="font-weight: 700; color: #0B1F17; margin-bottom: 6px; display: block;">Start Date</label>
+            <input type="date" id="chart-start-date" required class="modal-form-input">
+          </div>
+          <div class="input-group">
+            <label for="chart-end-date" style="font-weight: 700; color: #0B1F17; margin-bottom: 6px; display: block;">End Date</label>
+            <input type="date" id="chart-end-date" required class="modal-form-input">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+            <button type="submit" class="btn-primary" style="width: 100% !important; background-color: #0B1F17 !important; color: #D6FF1F !important; border-radius: 22px !important; height: 40px !important; font-weight: 700 !important; cursor: pointer !important; border: none !important;">Apply Custom Filter</button>
+            <button type="button" id="btn-reset-chart-calendar" class="btn-secondary" style="width: 100% !important; border-radius: 22px !important; height: 40px !important; font-weight: 700 !important; cursor: pointer !important; border: 1px solid rgba(11, 31, 23, 0.2) !important; background: transparent !important; color: #0B1F17 !important;">Reset to Last 6 Months</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=2026072920"></script>
+</body>
+</html>
