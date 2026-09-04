@@ -2439,9 +2439,12 @@ const triggerBackupExport = () => {
   downloadAnchor.remove();
 };
 
-elements.btnExportBackup.addEventListener('click', triggerBackupExport);
+if (elements.btnExportBackup) {
+  elements.btnExportBackup.addEventListener('click', triggerBackupExport);
+}
 
-elements.importFileInput.addEventListener('change', (e) => {
+if (elements.importFileInput) {
+  elements.importFileInput.addEventListener('change', (e) => {
   if (state.demoMode) {
     alert('Import is disabled in demo mode.');
     e.target.value = '';
@@ -3020,9 +3023,7 @@ const initGeneralSettingsTab = () => {
     const newExport = exportBtn.cloneNode(true);
     exportBtn.parentNode.replaceChild(newExport, exportBtn);
     newExport.addEventListener('click', () => {
-      if (elements.btnExportBackup) {
-        elements.btnExportBackup.click();
-      }
+      triggerBackupExport();
     });
   }
 
