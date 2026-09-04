@@ -2588,7 +2588,7 @@ body {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
   gap: 24px;
-  align-items: stretch;
+  align-items: start !important;
   width: 100%;
 }
 
@@ -2596,7 +2596,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height: 100%;
+  height: auto !important;
 }
 
 .dashboard-right-rail {
@@ -2604,26 +2604,24 @@ body {
   flex-direction: column;
   gap: 24px;
   width: 100%;
-  height: 100%;
+  height: auto !important;
 }
 
-/* Right Rail individual cards stretching to balance height */
+/* Right Rail individual cards fitting content cleanly */
 .recent-activity-card,
 .budgets-list-card,
 .renewals-list-card {
-  flex: 1;
+  flex: 0 0 auto !important;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: auto !important;
 }
 
 .recent-activity-card #dashboard-tx-list-new,
 .budgets-list-card #dashboard-budgets-list,
 .renewals-list-card #dashboard-renewals-list {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 /* Cards Hover/Lift Effect (Theme Switchable) */
@@ -3313,9 +3311,8 @@ body {
 
 .trend-chart-body {
   position: relative !important;
-  height: 240px !important;
-  min-height: 240px !important;
-  max-height: 240px !important;
+  height: 280px !important;
+  min-height: 280px !important;
   width: 100% !important;
 }
 
@@ -3895,23 +3892,23 @@ body {
 
 /* Height-balancing helpers */
 .trend-chart-card {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  flex: 0 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: auto !important;
   box-sizing: border-box;
 }
 
 .trend-chart-card .widget-body-new {
-  flex: 1;
   display: flex;
   flex-direction: column;
+  height: auto;
 }
 
 .trend-chart-body {
   position: relative !important;
-  height: 240px !important;
-  min-height: 240px !important;
-  max-height: 240px !important;
+  height: 280px !important;
+  min-height: 280px !important;
   width: 100% !important;
 }
 
