@@ -2,7 +2,7 @@
   "profile": {
     "currency": "EUR",
     "hourlyWage": 18.5,
-    "startingBalance": 2450.0,
+    "startingBalance": 8312.49,
     "displayName": "Alex"
   },
   "budgets": {
@@ -13,9 +13,369 @@
   },
   "transactions": [
     {
+      "id": "demo_tx_2026_09_01",
+      "type": "income",
+      "amount": 2850,
+      "name": "Salary & Client Retainer",
+      "date": "2026-09-01",
+      "category": "Salary",
+      "isNecessary": true,
+      "notes": "Monthly retainer payout"
+    },
+    {
+      "id": "demo_tx_2026_09_02",
+      "type": "expense",
+      "amount": 68.4,
+      "name": "Albert Heijn Groceries",
+      "date": "2026-09-02",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Weekly fresh groceries"
+    },
+    {
+      "id": "demo_tx_2026_09_03",
+      "type": "expense",
+      "amount": 45,
+      "name": "NS Transit Card Top-Up",
+      "date": "2026-09-03",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Monthly train and transit pass"
+    },
+    {
+      "id": "demo_tx_2026_09_04",
+      "type": "expense",
+      "amount": 34.99,
+      "name": "USB-C Cable & 65W GaN Charger",
+      "date": "2026-09-04",
+      "category": "Shopping",
+      "isNecessary": true,
+      "notes": "Workstation hardware gear"
+    },
+    {
+      "id": "demo_tx_2026_09_05",
+      "type": "expense",
+      "amount": 14.2,
+      "name": "Artisan Bakery & Espresso",
+      "date": "2026-09-05",
+      "category": "Food",
+      "isNecessary": false,
+      "notes": "Morning coffee and pastry"
+    },
+    {
+      "id": "demo_tx_2026_09_06",
+      "type": "expense",
+      "amount": 14.99,
+      "name": "Spotify Premium Family",
+      "date": "2026-09-06",
+      "category": "Miscellaneous",
+      "isNecessary": false,
+      "notes": "Monthly music stream"
+    },
+    {
+      "id": "demo_tx_2026_09_08",
+      "type": "expense",
+      "amount": 34.99,
+      "name": "Health & Gym Membership",
+      "date": "2026-09-08",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Fitness club access"
+    },
+    {
+      "id": "demo_tx_2026_09_09",
+      "type": "expense",
+      "amount": 72.8,
+      "name": "Jumbo Supermarkt Restock",
+      "date": "2026-09-09",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Weekly staples and pantry goods"
+    },
+    {
+      "id": "demo_tx_2026_09_11",
+      "type": "expense",
+      "amount": 59.9,
+      "name": "Minimal Clean Jacket",
+      "date": "2026-09-11",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Wardrobe essentials"
+    },
+    {
+      "id": "demo_tx_2026_09_13",
+      "type": "expense",
+      "amount": 48.5,
+      "name": "Dinner with Team (Osteria)",
+      "date": "2026-09-13",
+      "category": "Food",
+      "isNecessary": false,
+      "notes": "Weekend dinner"
+    },
+    {
+      "id": "demo_tx_2026_09_14",
+      "type": "expense",
+      "amount": 19,
+      "name": "GitHub Pro & Copilot",
+      "date": "2026-09-14",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Developer cloud toolset"
+    },
+    {
+      "id": "demo_tx_2026_09_15",
+      "type": "income",
+      "amount": 420,
+      "name": "Freelance UI / System Payout",
+      "date": "2026-09-15",
+      "category": "Side Gig",
+      "isNecessary": true,
+      "notes": "Milestone project payout"
+    },
+    {
+      "id": "demo_tx_2026_09_16",
+      "type": "expense",
+      "amount": 18.5,
+      "name": "Bolt City Ride",
+      "date": "2026-09-16",
+      "category": "Transport",
+      "isNecessary": false,
+      "notes": "Evening ride home"
+    },
+    {
+      "id": "demo_tx_2026_09_18",
+      "type": "expense",
+      "amount": 32.6,
+      "name": "Local Fresh Market",
+      "date": "2026-09-18",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Fresh fruits and produce"
+    },
+    {
+      "id": "demo_tx_2026_09_20",
+      "type": "expense",
+      "amount": 28.5,
+      "name": "Systems Architecture Book",
+      "date": "2026-09-20",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Engineering literature"
+    },
+    {
+      "id": "demo_tx_2026_09_22",
+      "type": "expense",
+      "amount": 20,
+      "name": "5G Unlimited Mobile Plan",
+      "date": "2026-09-22",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Phone network carrier"
+    },
+    {
+      "id": "demo_tx_2026_09_23",
+      "type": "expense",
+      "amount": 21.5,
+      "name": "Ramen Bar Lunch",
+      "date": "2026-09-23",
+      "category": "Food",
+      "isNecessary": false,
+      "notes": "Quick workday lunch"
+    },
+    {
+      "id": "demo_tx_2026_09_25",
+      "type": "expense",
+      "amount": 12.2,
+      "name": "City Tram & Metro GVB",
+      "date": "2026-09-25",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Local urban commute"
+    },
+    {
+      "id": "demo_tx_2026_08_01",
+      "type": "income",
+      "amount": 2850,
+      "name": "Salary & Client Retainer",
+      "date": "2026-08-01",
+      "category": "Salary",
+      "isNecessary": true,
+      "notes": "Monthly retainer payout"
+    },
+    {
+      "id": "demo_tx_2026_08_02",
+      "type": "expense",
+      "amount": 68.4,
+      "name": "Albert Heijn Groceries",
+      "date": "2026-08-02",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Weekly fresh groceries"
+    },
+    {
+      "id": "demo_tx_2026_08_03",
+      "type": "expense",
+      "amount": 45,
+      "name": "NS Transit Card Top-Up",
+      "date": "2026-08-03",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Monthly train and transit pass"
+    },
+    {
+      "id": "demo_tx_2026_08_04",
+      "type": "expense",
+      "amount": 34.99,
+      "name": "USB-C Cable & 65W GaN Charger",
+      "date": "2026-08-04",
+      "category": "Shopping",
+      "isNecessary": true,
+      "notes": "Workstation hardware gear"
+    },
+    {
+      "id": "demo_tx_2026_08_05",
+      "type": "expense",
+      "amount": 14.2,
+      "name": "Artisan Bakery & Espresso",
+      "date": "2026-08-05",
+      "category": "Food",
+      "isNecessary": false,
+      "notes": "Morning coffee and pastry"
+    },
+    {
+      "id": "demo_tx_2026_08_06",
+      "type": "expense",
+      "amount": 14.99,
+      "name": "Spotify Premium Family",
+      "date": "2026-08-06",
+      "category": "Miscellaneous",
+      "isNecessary": false,
+      "notes": "Monthly music stream"
+    },
+    {
+      "id": "demo_tx_2026_08_08",
+      "type": "expense",
+      "amount": 34.99,
+      "name": "Health & Gym Membership",
+      "date": "2026-08-08",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Fitness club access"
+    },
+    {
+      "id": "demo_tx_2026_08_09",
+      "type": "expense",
+      "amount": 72.8,
+      "name": "Jumbo Supermarkt Restock",
+      "date": "2026-08-09",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Weekly staples and pantry goods"
+    },
+    {
+      "id": "demo_tx_2026_08_11",
+      "type": "expense",
+      "amount": 59.9,
+      "name": "Minimal Clean Jacket",
+      "date": "2026-08-11",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Wardrobe essentials"
+    },
+    {
+      "id": "demo_tx_2026_08_13",
+      "type": "expense",
+      "amount": 48.5,
+      "name": "Dinner with Team (Osteria)",
+      "date": "2026-08-13",
+      "category": "Food",
+      "isNecessary": false,
+      "notes": "Weekend dinner"
+    },
+    {
+      "id": "demo_tx_2026_08_14",
+      "type": "expense",
+      "amount": 19,
+      "name": "GitHub Pro & Copilot",
+      "date": "2026-08-14",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Developer cloud toolset"
+    },
+    {
+      "id": "demo_tx_2026_08_15",
+      "type": "income",
+      "amount": 420,
+      "name": "Freelance UI / System Payout",
+      "date": "2026-08-15",
+      "category": "Side Gig",
+      "isNecessary": true,
+      "notes": "Milestone project payout"
+    },
+    {
+      "id": "demo_tx_2026_08_16",
+      "type": "expense",
+      "amount": 18.5,
+      "name": "Bolt City Ride",
+      "date": "2026-08-16",
+      "category": "Transport",
+      "isNecessary": false,
+      "notes": "Evening ride home"
+    },
+    {
+      "id": "demo_tx_2026_08_18",
+      "type": "expense",
+      "amount": 32.6,
+      "name": "Local Fresh Market",
+      "date": "2026-08-18",
+      "category": "Food",
+      "isNecessary": true,
+      "notes": "Fresh fruits and produce"
+    },
+    {
+      "id": "demo_tx_2026_08_20",
+      "type": "expense",
+      "amount": 28.5,
+      "name": "Systems Architecture Book",
+      "date": "2026-08-20",
+      "category": "Shopping",
+      "isNecessary": false,
+      "notes": "Engineering literature"
+    },
+    {
+      "id": "demo_tx_2026_08_22",
+      "type": "expense",
+      "amount": 20,
+      "name": "5G Unlimited Mobile Plan",
+      "date": "2026-08-22",
+      "category": "Miscellaneous",
+      "isNecessary": true,
+      "notes": "Phone network carrier"
+    },
+    {
+      "id": "demo_tx_2026_08_23",
+      "type": "expense",
+      "amount": 21.5,
+      "name": "Ramen Bar Lunch",
+      "date": "2026-08-23",
+      "category": "Food",
+      "isNecessary": false,
+      "notes": "Quick workday lunch"
+    },
+    {
+      "id": "demo_tx_2026_08_25",
+      "type": "expense",
+      "amount": 12.2,
+      "name": "City Tram & Metro GVB",
+      "date": "2026-08-25",
+      "category": "Transport",
+      "isNecessary": true,
+      "notes": "Local urban commute"
+    },
+    {
       "id": "demo_tx_001",
       "type": "income",
-      "amount": 2200.0,
+      "amount": 2200,
       "name": "Freelance retainer — Studio Nova",
       "date": "2026-07-01",
       "category": "Salary",
@@ -45,7 +405,7 @@
     {
       "id": "demo_tx_004",
       "type": "expense",
-      "amount": 64.0,
+      "amount": 64,
       "name": "Thread & Co.",
       "date": "2026-07-04",
       "category": "Shopping",
@@ -65,7 +425,7 @@
     {
       "id": "demo_tx_006",
       "type": "income",
-      "amount": 350.0,
+      "amount": 350,
       "name": "Side project payout",
       "date": "2026-07-06",
       "category": "Side Gig",
@@ -105,7 +465,7 @@
     {
       "id": "demo_tx_010",
       "type": "expense",
-      "amount": 24.0,
+      "amount": 24,
       "name": "CloudHost Pro",
       "date": "2026-07-11",
       "category": "Miscellaneous",
@@ -115,7 +475,7 @@
     {
       "id": "demo_tx_011",
       "type": "expense",
-      "amount": 55.0,
+      "amount": 55,
       "name": "Pixel Market",
       "date": "2026-07-12",
       "category": "Shopping",
@@ -145,7 +505,7 @@
     {
       "id": "demo_tx_014",
       "type": "income",
-      "amount": 120.0,
+      "amount": 120,
       "name": "Refund — Pixel Market",
       "date": "2026-07-16",
       "category": "Refund",
@@ -165,7 +525,7 @@
     {
       "id": "demo_tx_016",
       "type": "expense",
-      "amount": 45.0,
+      "amount": 45,
       "name": "Weekend Brunch Co.",
       "date": "2026-07-20",
       "category": "Food",
@@ -185,7 +545,7 @@
     {
       "id": "demo_tx_018",
       "type": "expense",
-      "amount": 72.0,
+      "amount": 72,
       "name": "TradeDesk Monthly",
       "date": "2026-07-23",
       "category": "Miscellaneous",
@@ -215,7 +575,7 @@
     {
       "id": "demo_tx_021",
       "type": "income",
-      "amount": 2100.0,
+      "amount": 2100,
       "name": "Freelance retainer — Studio Nova",
       "date": "2026-06-01",
       "category": "Salary",
@@ -255,7 +615,7 @@
     {
       "id": "demo_tx_025",
       "type": "expense",
-      "amount": 22.0,
+      "amount": 22,
       "name": "CloudHost Pro",
       "date": "2026-06-11",
       "category": "Miscellaneous",
@@ -275,7 +635,7 @@
     {
       "id": "demo_tx_027",
       "type": "income",
-      "amount": 280.0,
+      "amount": 280,
       "name": "Workshop honorarium",
       "date": "2026-06-18",
       "category": "Side Gig",
@@ -305,7 +665,7 @@
     {
       "id": "demo_tx_030",
       "type": "expense",
-      "amount": 47.0,
+      "amount": 47,
       "name": "PrintLab Supplies",
       "date": "2026-06-25",
       "category": "Miscellaneous",
@@ -315,7 +675,7 @@
     {
       "id": "demo_tx_031",
       "type": "income",
-      "amount": 2050.0,
+      "amount": 2050,
       "name": "Freelance retainer — Studio Nova",
       "date": "2026-05-01",
       "category": "Salary",
@@ -345,7 +705,7 @@
     {
       "id": "demo_tx_034",
       "type": "expense",
-      "amount": 120.0,
+      "amount": 120,
       "name": "DeskCraft Store",
       "date": "2026-05-09",
       "category": "Shopping",
@@ -355,7 +715,7 @@
     {
       "id": "demo_tx_035",
       "type": "expense",
-      "amount": 22.0,
+      "amount": 22,
       "name": "CloudHost Pro",
       "date": "2026-05-11",
       "category": "Miscellaneous",
@@ -375,7 +735,7 @@
     {
       "id": "demo_tx_037",
       "type": "income",
-      "amount": 150.0,
+      "amount": 150,
       "name": "Birthday gift",
       "date": "2026-05-18",
       "category": "Gift",
@@ -405,7 +765,7 @@
     {
       "id": "demo_tx_040",
       "type": "expense",
-      "amount": 18.0,
+      "amount": 18,
       "name": "CityRide Bike Share",
       "date": "2026-05-28",
       "category": "Transport",
@@ -416,39 +776,48 @@
   "subscriptions": [
     {
       "id": "demo_sub_001",
-      "name": "StreamBox Plus",
+      "name": "Spotify Premium",
       "cost": 14.99,
       "cycle": "monthly",
       "category": "Entertainment",
-      "nextRenewal": "2026-08-07",
+      "nextRenewal": "2026-09-08",
       "active": true
     },
     {
       "id": "demo_sub_002",
-      "name": "CloudHost Pro",
-      "cost": 24.0,
+      "name": "Health & Gym Club",
+      "cost": 34.99,
       "cycle": "monthly",
-      "category": "Software",
-      "nextRenewal": "2026-08-11",
+      "category": "Health",
+      "nextRenewal": "2026-09-12",
       "active": true
     },
     {
       "id": "demo_sub_003",
-      "name": "FocusMusic Premium",
-      "cost": 9.99,
+      "name": "GitHub Pro & Copilot",
+      "cost": 19,
       "cycle": "monthly",
-      "category": "Entertainment",
-      "nextRenewal": "2026-08-03",
+      "category": "Software",
+      "nextRenewal": "2026-09-15",
       "active": true
     },
     {
       "id": "demo_sub_004",
-      "name": "TradeDesk Monthly",
-      "cost": 72.0,
+      "name": "5G Unlimited Data Plan",
+      "cost": 20,
+      "cycle": "monthly",
+      "category": "Utilities",
+      "nextRenewal": "2026-09-22",
+      "active": true
+    },
+    {
+      "id": "demo_sub_005",
+      "name": "Figma Professional",
+      "cost": 15,
       "cycle": "monthly",
       "category": "Software",
-      "nextRenewal": "2026-08-23",
-      "active": false
+      "nextRenewal": "2026-09-28",
+      "active": true
     }
   ]
 }
