@@ -26,49 +26,12 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- CSS -->
-  <link rel="stylesheet" href="styles.css?v=20260904_6">
+  <link rel="stylesheet" href="styles.css?v=20260904_9">
 </head>
 <body>
 
-  <!-- ==================== LOGIN SCREEN ==================== -->
-  <div id="login-container" class="auth-screen">
-    <!-- Fullscreen Video Background -->
-    <video autoplay muted loop playsinline id="login-bg-video">
-      <source src="login-bg.mp4" type="video/mp4">
-    </video>
-    
-    <div class="auth-card-clean">
-      <div class="auth-header-clean">
-        <span class="auth-subtitle">WELCOME BACK</span>
-        <h1 class="auth-title">Sign in to your account</h1>
-      </div>
-      <form id="login-form">
-        <div class="input-group-clean">
-          <input type="email" id="email" placeholder="Email address" value="miltomy1@gmail.com" required>
-        </div>
-        <div class="input-group-clean password-wrapper">
-          <input type="password" id="password" placeholder="Password" value="Saikik1234^" required>
-          <button type="button" id="toggle-password-visibility" class="btn-toggle-pw">
-            <i data-lucide="eye"></i>
-          </button>
-        </div>
-        <div class="form-actions-clean">
-          <a href="#" class="forgot-link">Forgot password?</a>
-        </div>
-        <div id="login-error" class="error-msg hidden">
-          <i data-lucide="alert-circle"></i>
-          <span>Incorrect email or password.</span>
-        </div>
-        <button type="submit" class="btn-submit-clean">SIGN IN</button>
-        <div class="auth-footer-clean">
-          Don't have an account? <a href="#" class="register-link">Register here</a>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <!-- ==================== MAIN APPLICATION ==================== -->
-  <div id="app-container" class="app-layout hidden">
+  <div id="app-container" class="app-layout">
     <!-- Sidebar Navigation (Desktop) -->
     <aside class="sidebar" id="app-sidebar">
       <button id="sidebar-collapse-btn" class="sidebar-collapse-toggle">
@@ -109,9 +72,9 @@
           <i data-lucide="moon" id="theme-toggle-icon"></i>
           <span>Dark Mode</span>
         </button>
-        <button id="logout-btn" class="btn-logout">
-          <i data-lucide="log-out"></i>
-          <span>Lock Vault</span>
+        <button id="logout-btn" class="btn-logout" title="Reset demo data">
+          <i data-lucide="rotate-ccw"></i>
+          <span>Reset Demo</span>
         </button>
       </div>
     </aside>
@@ -126,8 +89,8 @@
         <button id="mobile-refresh-btn" class="mobile-header-btn" type="button" aria-label="Refresh">
           <i data-lucide="refresh-cw"></i>
         </button>
-        <button id="mobile-logout-btn" class="mobile-logout mobile-header-btn" type="button" aria-label="Lock vault">
-          <i data-lucide="log-out"></i>
+        <button id="mobile-logout-btn" class="mobile-logout mobile-header-btn" type="button" aria-label="Reset Demo Data" title="Reset demo data">
+          <i data-lucide="rotate-ccw"></i>
         </button>
       </div>
     </header>
@@ -140,7 +103,7 @@
         <div class="pane-header">
           <div>
             <h1>Dashboard</h1>
-            <p id="dashboard-date-greeting">Good afternoon Milton!</p>
+            <p id="dashboard-date-greeting">Good afternoon Alex!</p>
           </div>
           <div class="header-actions">
             <button type="button" class="month-picker-trigger" id="dashboard-month-picker-btn" aria-label="Select month">
@@ -714,7 +677,7 @@
               <div class="settings-inputs-wrapper" style="display: flex; flex-direction: column; gap: 10px;">
                 <div class="input-group">
                   <label>Email Address</label>
-                  <input type="email" value="miltomy1@gmail.com" readonly style="opacity: 0.85; cursor: not-allowed; width: 100%;">
+                  <input type="email" value="alex.demo@spendwise.app" readonly style="opacity: 0.85; cursor: not-allowed; width: 100%;">
                 </div>
                 <div class="input-group">
                   <label>Base Currency</label>
@@ -1122,6 +1085,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260904_6"></script>
+  <script src="app.js?v=20260904_9"></script>
 </body>
 </html>

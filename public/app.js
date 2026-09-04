@@ -1,9 +1,5 @@
-// State management
-const isDemoMode = () => {
-  return new URLSearchParams(window.location.search).has('demo') ||
-         window.location.hostname.includes('vercel.app') ||
-         !localStorage.getItem('spendwise_token');
-};
+// State management
+const isDemoMode = () => true;
 
 const getCurrentMonthKey = () => {
   const now = new Date();
@@ -618,7 +614,12 @@ const ensureMonthHasData = (monthKey) => {
 
 const ensureCurrentAndRecentMonthsData = () => {
   if (!state.data) state.data = {};
-  if (!state.data.transactions) state.data.transactions = [];
+  if (!state.data.profile) {
+    state.data.profile = { currency: 'EUR', hourlyWage: 18.50, startingBalance: 8312.49, displayName: 'Alex' };
+  }
+  if (!state.data.transactions || state.data.transactions.length === 0) {
+    state.data.transactions = JSON.parse(JSON.stringify(DEFAULT_TRANSACTIONS));
+  }
   if (!state.data.budgets || Object.keys(state.data.budgets).length === 0) {
     state.data.budgets = {
       Food: 320,
@@ -711,8 +712,9 @@ const initDemoMode = () => {
   [elements.logoutBtn, elements.mobileLogoutBtn].forEach((btn) => {
     if (!btn) return;
     const label = btn.querySelector('span');
-    if (label) label.textContent = 'Reset demo';
-    btn.setAttribute('aria-label', 'Reset demo');
+    if (label) label.textContent = 'Reset Demo';
+    btn.setAttribute('aria-label', 'Reset Demo Data');
+    btn.setAttribute('title', 'Reset Demo Data');
   });
 
   document.querySelectorAll('[data-demo-hide]').forEach((el) => {
@@ -722,97 +724,68 @@ const initDemoMode = () => {
   showApp();
 };
 
-// ==================== AUTHENTICATION WORKFLOW ====================
+// ==================== AUTHENTICATION & DEMO WORKFLOW ====================
 
-// Verify session on initial load
+// Verify session on initial load (public showcase opens straight into app)
 const initAuth = async () => {
-  if (state.demoMode) {
-    initDemoMode();
-    return;
-  }
-  if (state.token) {
-    try {
-      const response = await fetch('/api/auth/verify', {
-        headers: { 'Authorization': `Bearer ${state.token}` }
-      });
-      if (response.ok) {
-        showApp();
-      } else {
-        logout();
-      }
-    } catch (error) {
-      console.error('Session verification failed, server offline?', error);
-      // Keep offline/local status if needed, but for safety require login
-      logout();
-    }
-  } else {
-    showLogin();
-  }
+  initDemoMode();
 };
 
-// Show Login panel
+// Show Login panel (fallback to app in public demo)
 const showLogin = () => {
-  elements.loginContainer.classList.remove('hidden');
-  elements.appContainer.classList.add('hidden');
-  refreshIcons();
+  showApp();
 };
 
 // Show main Dashboard
 const showApp = () => {
-  elements.loginContainer.classList.add('hidden');
-  elements.appContainer.classList.remove('hidden');
+  if (elements.loginContainer) elements.loginContainer.classList.add('hidden');
+  if (elements.appContainer) elements.appContainer.classList.remove('hidden');
   setupDashboardGreeting();
   fetchData();
 };
 
-// Handle Login submission
-elements.loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = elements.email.value;
-  const password = elements.password.value;
-  elements.loginError.classList.add('hidden');
-
-  try {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-
-    if (response.ok) {
-      const resData = await response.json();
-      state.token = resData.token;
-      localStorage.setItem('spendwise_token', state.token);
-      elements.email.value = '';
-      elements.password.value = '';
-      showApp();
-    } else {
-      // Fallback for demo / portfolio preview
-      state.demoMode = true;
-      showApp();
-    }
-  } catch (error) {
-    console.error('Authentication request error (fallback to demo mode):', error);
+// Handle Login submission (if form exists)
+if (elements.loginForm) {
+  elements.loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
     state.demoMode = true;
     showApp();
-  }
-});
+  });
+}
 
-// Logout method
-const logout = () => {
-  if (state.demoMode) {
-    window.location.reload();
-    return;
-  }
-  state.token = null;
-  localStorage.removeItem('spendwise_token');
-  elements.loginContainer.classList.remove('hidden');
-  elements.appContainer.classList.add('hidden');
-  window.location.reload();
+// Reset demo data method
+const resetDemoData = () => {
+  state.data = {
+    profile: { currency: 'EUR', hourlyWage: 18.50, startingBalance: 8312.49, displayName: 'Alex' },
+    budgets: {
+      Food: 320,
+      Shopping: 180,
+      Transport: 95,
+      Miscellaneous: 120
+    },
+    transactions: JSON.parse(JSON.stringify(DEFAULT_TRANSACTIONS)),
+    subscriptions: [
+      { id: 'demo_sub_001', name: 'Spotify Premium Family', cost: 17.99, cycle: 'monthly', category: 'Entertainment', active: true },
+      { id: 'demo_sub_002', name: 'Fitness Club Membership', cost: 35.00, cycle: 'monthly', category: 'Health', active: true },
+      { id: 'demo_sub_003', name: 'GitHub Pro & Copilot', cost: 19.00, cycle: 'monthly', category: 'Software', active: true },
+      { id: 'demo_sub_004', name: '5G Unlimited Data Plan', cost: 20.00, cycle: 'monthly', category: 'Utilities', active: true },
+      { id: 'demo_sub_005', name: 'Figma Professional', cost: 15.00, cycle: 'monthly', category: 'Software', active: true }
+    ]
+  };
+  ensureCurrentAndRecentMonthsData();
+  renderApp();
+  setupDashboardGreeting();
+  if (state.activeTab === 'transactions') renderTransactionsTab();
+  if (state.activeTab === 'subscriptions') renderSubscriptionsTab();
 };
 
-elements.logoutBtn.addEventListener('click', logout);
-elements.mobileLogoutBtn.addEventListener('click', logout);
+// Logout / Reset button handler
+const logout = () => {
+  resetDemoData();
+};
+
+if (elements.logoutBtn) elements.logoutBtn.addEventListener('click', logout);
+if (elements.mobileLogoutBtn) elements.mobileLogoutBtn.addEventListener('click', logout);
 
 // ==================== API COMMUNICATIONS ====================
 
@@ -820,20 +793,26 @@ elements.mobileLogoutBtn.addEventListener('click', logout);
 const fetchData = async () => {
   if (state.demoMode) {
     try {
-      const response = await fetch(new URL('demo-data.json', window.location.href));
-      if (!response.ok) throw new Error('Failed to load demo data');
-      state.data = await response.json();
-      ensureCurrentAndRecentMonthsData();
-      renderApp();
-      setupDashboardGreeting();
-      return true;
+      const demoUrl = window.location.pathname.endsWith('/')
+        ? `${window.location.pathname}demo-data.json`
+        : `${window.location.pathname}/demo-data.json`;
+      const response = await fetch(demoUrl).catch(() => fetch('/spendwise/demo-data.json'));
+      if (response && response.ok) {
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const loadedData = await response.json();
+          if (loadedData && typeof loadedData === 'object') {
+            state.data = loadedData;
+          }
+        }
+      }
     } catch (error) {
-      console.error('Error loading demo data:', error);
-      ensureCurrentAndRecentMonthsData();
-      renderApp();
-      setupDashboardGreeting();
-      return false;
+      console.warn('Using embedded demo dataset:', error);
     }
+    ensureCurrentAndRecentMonthsData();
+    renderApp();
+    setupDashboardGreeting();
+    return true;
   }
 
   try {
@@ -1078,7 +1057,7 @@ const switchTab = (tabName) => {
 };
 
 // Set welcome message based on time of day
-const getGreetingName = () => state.data?.profile?.displayName?.trim() || 'Milton';
+const getGreetingName = () => state.data?.profile?.displayName?.trim() || 'Alex';
 
 const setupDashboardGreeting = () => {
   if (!elements.dashboardGreeting) return;
@@ -1991,9 +1970,9 @@ const renderDashboardRenewals = () => {
   refreshIcons();
 };
 
-elements.btnViewAllTx.addEventListener('click', () => switchTab('transactions'));
-
-elements.btnViewAllTx.addEventListener('click', () => switchTab('transactions'));
+if (elements.btnViewAllTx) {
+  elements.btnViewAllTx.addEventListener('click', () => switchTab('transactions'));
+}
 
 // --- RENDER: TRANSACTIONS TAB ---
 const renderTransactionsTab = () => {
@@ -2162,9 +2141,9 @@ const renderTransactionsTab = () => {
 };
 
 // Bind Transaction Filters
-elements.txSearchInput.addEventListener('input', renderTransactionsTab);
-elements.txFilterType.addEventListener('change', renderTransactionsTab);
-elements.txFilterCategory.addEventListener('change', renderTransactionsTab);
+if (elements.txSearchInput) elements.txSearchInput.addEventListener('input', renderTransactionsTab);
+if (elements.txFilterType) elements.txFilterType.addEventListener('change', renderTransactionsTab);
+if (elements.txFilterCategory) elements.txFilterCategory.addEventListener('change', renderTransactionsTab);
 
 // --- RENDER: SUBSCRIPTIONS TAB ---
 const renderSubscriptionsTab = () => {
@@ -2390,49 +2369,54 @@ const populateSettingsTab = () => {
 };
 
 // Hourly wage saver
-elements.btnSaveWage.addEventListener('click', () => {
-  const wage = parseFloat(elements.calcHourlyWage.value);
-  if (wage > 0) {
-    saveSettings({ hourlyWage: wage }, null);
-    alert('Hourly wage updated successfully!');
-  }
-});
-
-// Category budgets saver
-elements.budgetSettingsForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const budgets = {};
-  const inputs = elements.budgetInputsContainer.querySelectorAll('input');
-  
-  inputs.forEach(input => {
-    const cat = input.getAttribute('data-category');
-    const val = parseFloat(input.value);
-    if (!isNaN(val) && val >= 0) {
-      budgets[cat] = val;
+if (elements.btnSaveWage && elements.calcHourlyWage) {
+  elements.btnSaveWage.addEventListener('click', () => {
+    const wage = parseFloat(elements.calcHourlyWage.value);
+    if (wage > 0) {
+      saveSettings({ hourlyWage: wage }, null);
+      alert('Hourly wage updated successfully!');
     }
   });
+}
 
-  saveSettings(null, budgets);
-  alert('Budgets updated successfully!');
-});
+// Category budgets saver
+if (elements.budgetSettingsForm && elements.budgetInputsContainer) {
+  elements.budgetSettingsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const budgets = {};
+    const inputs = elements.budgetInputsContainer.querySelectorAll('input');
+    
+    inputs.forEach(input => {
+      const cat = input.getAttribute('data-category');
+      const val = parseFloat(input.value);
+      if (!isNaN(val) && val >= 0) {
+        budgets[cat] = val;
+      }
+    });
+
+    saveSettings(null, budgets);
+    alert('Budgets updated successfully!');
+  });
+}
 
 // Interactive Worth It Calculator
 const updateWorthItCalc = () => {
+  if (!elements.calcItemCost || !elements.calcHourlyWage || !elements.resultHours || !elements.calculatorResult) return;
   const cost = parseFloat(elements.calcItemCost.value);
-  const wage = parseFloat(elements.calcHourlyWage.value) || state.data.profile.hourlyWage;
+  const wage = parseFloat(elements.calcHourlyWage.value) || state.data?.profile?.hourlyWage || 18.5;
 
   if (cost > 0 && wage > 0) {
     const hours = (cost / wage).toFixed(1);
     elements.resultHours.innerText = hours;
-    elements.resultHoursBold.innerText = `${hours} hours`;
+    if (elements.resultHoursBold) elements.resultHoursBold.innerText = `${hours} hours`;
     elements.calculatorResult.classList.remove('hidden');
   } else {
     elements.calculatorResult.classList.add('hidden');
   }
 };
 
-elements.calcItemCost.addEventListener('input', updateWorthItCalc);
-elements.calcHourlyWage.addEventListener('input', updateWorthItCalc);
+if (elements.calcItemCost) elements.calcItemCost.addEventListener('input', updateWorthItCalc);
+if (elements.calcHourlyWage) elements.calcHourlyWage.addEventListener('input', updateWorthItCalc);
 
 // --- IMPORT & EXPORT HANDLERS ---
 const triggerBackupExport = () => {
@@ -2451,47 +2435,48 @@ if (elements.btnExportBackup) {
 
 if (elements.importFileInput) {
   elements.importFileInput.addEventListener('change', (e) => {
-  if (state.demoMode) {
-    alert('Import is disabled in demo mode.');
-    e.target.value = '';
-    return;
-  }
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = async (event) => {
-    try {
-      const parsed = JSON.parse(event.target.result);
-      // Validate schema format
-      if (!parsed.transactions || !parsed.subscriptions || !parsed.profile) {
-        alert('Invalid backup file structure!');
-        return;
-      }
-
-      if (confirm('Importing this file will overwrite all current transactions and settings. Continue?')) {
-        const response = await fetch('/api/data', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${state.token}`
-          },
-          body: JSON.stringify(parsed)
-        });
-        if (response.ok) {
-          alert('Backup restored successfully!');
-          fetchData();
-        } else {
-          alert('Failed to upload data to server.');
-        }
-      }
-    } catch (err) {
-      alert('Error parsing JSON backup file.');
-      console.error(err);
+    if (state.demoMode) {
+      alert('Import is disabled in demo mode.');
+      e.target.value = '';
+      return;
     }
-  };
-  reader.readAsText(file);
-});
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const parsed = JSON.parse(event.target.result);
+        // Validate schema format
+        if (!parsed.transactions || !parsed.subscriptions || !parsed.profile) {
+          alert('Invalid backup file structure!');
+          return;
+        }
+
+        if (confirm('Importing this file will overwrite all current transactions and settings. Continue?')) {
+          const response = await fetch('/api/data', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${state.token}`
+            },
+            body: JSON.stringify(parsed)
+          });
+          if (response.ok) {
+            alert('Backup restored successfully!');
+            fetchData();
+          } else {
+            alert('Failed to upload data to server.');
+          }
+        }
+      } catch (err) {
+        alert('Error parsing JSON backup file.');
+        console.error(err);
+      }
+    };
+    reader.readAsText(file);
+  });
+}
 
 // ==================== MODAL BEHAVIORS ====================
 
@@ -2551,47 +2536,53 @@ const setTxModalType = (type) => {
   }
 };
 
-elements.toggleExpense.addEventListener('click', () => setTxModalType('expense'));
-elements.toggleIncome.addEventListener('click', () => setTxModalType('income'));
+if (elements.toggleExpense) elements.toggleExpense.addEventListener('click', () => setTxModalType('expense'));
+if (elements.toggleIncome) elements.toggleIncome.addEventListener('click', () => setTxModalType('income'));
 
-elements.txName.addEventListener('input', () => {
-  if (state.currentTxType !== 'expense') return;
-  const inferred = inferCategoryFromMerchant(elements.txName.value);
-  if (inferred) {
-    elements.txCategory.value = inferred;
-    applyInferredNecessityToForm(inferred);
-  }
-});
+if (elements.txName) {
+  elements.txName.addEventListener('input', () => {
+    if (state.currentTxType !== 'expense') return;
+    const inferred = inferCategoryFromMerchant(elements.txName.value);
+    if (inferred && elements.txCategory) {
+      elements.txCategory.value = inferred;
+      applyInferredNecessityToForm(inferred);
+    }
+  });
+}
 
-elements.txCategory.addEventListener('change', () => {
-  if (state.currentTxType !== 'expense') return;
-  applyInferredNecessityToForm(elements.txCategory.value);
-});
+if (elements.txCategory) {
+  elements.txCategory.addEventListener('change', () => {
+    if (state.currentTxType !== 'expense') return;
+    applyInferredNecessityToForm(elements.txCategory.value);
+  });
+}
 
 // Transaction form submit handler
-elements.txForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  
-  const tx = {
-    type: state.currentTxType,
-    amount: parseFloat(elements.txAmount.value),
-    name: elements.txName.value,
-    date: elements.txDate.value,
-    category: elements.txCategory.value,
-    isNecessary: state.currentTxType === 'expense' ? elements.txNecessary.checked : true,
-    notes: elements.txNotes.value
-  };
+if (elements.txForm) {
+  elements.txForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const tx = {
+      type: state.currentTxType,
+      amount: parseFloat(elements.txAmount.value),
+      name: elements.txName.value,
+      date: elements.txDate.value,
+      category: elements.txCategory.value,
+      isNecessary: state.currentTxType === 'expense' ? elements.txNecessary.checked : true,
+      notes: elements.txNotes.value
+    };
 
-  if (tx.type === 'expense') {
-    tx.category = resolveExpenseCategory(tx);
-    const inferredNecessary = inferIsNecessaryFromCategory(tx.category);
-    if (inferredNecessary !== null) {
-      tx.isNecessary = inferredNecessary;
+    if (tx.type === 'expense') {
+      tx.category = resolveExpenseCategory(tx);
+      const inferredNecessary = inferIsNecessaryFromCategory(tx.category);
+      if (inferredNecessary !== null) {
+        tx.isNecessary = inferredNecessary;
+      }
     }
-  }
 
-  addTransaction(tx);
-});
+    addTransaction(tx);
+  });
+}
 
 // Open subscription modal (supports new and editing)
 const openSubModal = (sub = null) => {
@@ -2622,28 +2613,32 @@ const openSubModal = (sub = null) => {
 };
 
 // Subscription form submit handler
-elements.subForm.addEventListener('submit', (e) => {
-  e.preventDefault();
+if (elements.subForm) {
+  elements.subForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-  const sub = {
-    name: elements.subName.value,
-    cost: parseFloat(elements.subCost.value),
-    cycle: elements.subCycle.value,
-    category: elements.subCategory.value,
-    nextRenewal: elements.subNextRenewal.value,
-    active: elements.subActive.checked
-  };
+    const sub = {
+      name: elements.subName.value,
+      cost: parseFloat(elements.subCost.value),
+      cycle: elements.subCycle.value,
+      category: elements.subCategory.value,
+      nextRenewal: elements.subNextRenewal.value,
+      active: elements.subActive.checked
+    };
 
-  const idVal = elements.subId.value;
-  if (idVal) {
-    sub.id = idVal;
-  }
+    const idVal = elements.subId.value;
+    if (idVal) {
+      sub.id = idVal;
+    }
 
-  saveSubscription(sub);
-});
+    saveSubscription(sub);
+  });
+}
 
 // Attach modal trigger buttons listeners
-elements.btnAddTxTriggers.forEach(btn => btn.addEventListener('click', openTxModal));
+if (elements.btnAddTxTriggers) {
+  elements.btnAddTxTriggers.forEach(btn => btn.addEventListener('click', openTxModal));
+}
 
 const btnIncomeTrigger = document.querySelector('.btn-add-tx-trigger-income');
 if (btnIncomeTrigger) {
@@ -2661,7 +2656,9 @@ if (btnExpenseTrigger) {
   });
 }
 
-elements.btnAddSubTrigger.addEventListener('click', () => openSubModal());
+if (elements.btnAddSubTrigger) {
+  elements.btnAddSubTrigger.addEventListener('click', () => openSubModal());
+}
 
 document.querySelectorAll('.btn-view-all-tx').forEach(btn => {
   btn.addEventListener('click', () => switchTab('transactions'));
