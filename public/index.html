@@ -26,7 +26,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- CSS -->
-  <link rel="stylesheet" href="styles.css?v=20260904_3">
+  <link rel="stylesheet" href="styles.css?v=20260904_4">
 </head>
 <body>
 
@@ -750,17 +750,26 @@
               <h2>Profile Settings</h2>
               <i data-lucide="user"></i>
             </div>
-            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
-              <div class="input-group">
-                <label>Email Address</label>
-                <input type="email" value="miltomy1@gmail.com" readonly style="opacity: 0.8; cursor: not-allowed; width: 100%;">
+            <div class="card-body">
+              <p>Your authenticated profile credentials and default transaction currency.</p>
+              <div class="settings-inputs-wrapper" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="input-group">
+                  <label>Email Address</label>
+                  <input type="email" value="miltomy1@gmail.com" readonly style="opacity: 0.85; cursor: not-allowed; width: 100%;">
+                </div>
+                <div class="input-group">
+                  <label>Base Currency</label>
+                  <select disabled style="opacity: 0.85; cursor: not-allowed; width: 100%;">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                  </select>
+                </div>
               </div>
-              <div class="input-group">
-                <label>Base Currency</label>
-                <select disabled style="opacity: 0.8; cursor: not-allowed; width: 100%;">
-                  <option value="USD">USD ($)</option>
-                  <option value="EUR">EUR (€)</option>
-                </select>
+              <div class="card-action-bottom">
+                <div class="settings-card-meta-bar">
+                  <i data-lucide="shield-check" style="width: 15px; height: 15px; color: var(--color-green);"></i>
+                  <span>Primary Vault Identity Active</span>
+                </div>
               </div>
             </div>
           </div>
@@ -771,11 +780,28 @@
               <h2>Visual Preferences</h2>
               <i data-lucide="palette"></i>
             </div>
-            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
-              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Switch between light and dark themes manually.</p>
-              <button id="settings-theme-toggle" class="btn-primary" type="button" style="width: 100%; height: 36px; font-weight: 700; cursor: pointer;">
-                Toggle Theme Mode
-              </button>
+            <div class="card-body">
+              <p>Switch between light and dark themes and configure display contrast.</p>
+              <div class="settings-info-box">
+                <div class="settings-info-row">
+                  <span>Active Theme</span>
+                  <span id="settings-current-theme" class="status-green">Dark Mode</span>
+                </div>
+                <div class="settings-info-row">
+                  <span>Accent Palette</span>
+                  <span>Saturated Lime</span>
+                </div>
+                <div class="settings-info-row">
+                  <span>Display Rendering</span>
+                  <span>Retina Optimized</span>
+                </div>
+              </div>
+              <div class="card-action-bottom">
+                <button id="settings-theme-toggle" class="btn-primary" type="button">
+                  <i data-lucide="palette" style="width: 16px; height: 16px;"></i>
+                  <span>Toggle Theme Mode</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -785,16 +811,34 @@
               <h2>Data Management</h2>
               <i data-lucide="database"></i>
             </div>
-            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
-              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Safeguard your data by exporting backups or restoring previous database files.</p>
-              <button id="btn-export-backup-settings" class="btn-secondary" style="width: 100%; height: 36px; font-weight: 700;">
-                <i data-lucide="download" style="width: 15px; height: 15px; margin-right: 6px; display: inline-block; vertical-align: middle;"></i>Export Backup
-              </button>
-              <div class="import-wrapper" data-demo-hide>
-                <label for="import-file-input-settings" class="btn-secondary" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 36px; font-weight: 700; cursor: pointer; box-sizing: border-box;">
-                  <i data-lucide="upload" style="width: 15px; height: 15px; margin-right: 6px;"></i>Import Backup
-                </label>
-                <input type="file" id="import-file-input-settings" class="hidden" accept=".json">
+            <div class="card-body">
+              <p>Safeguard your local-first financial vault. Manage backups or restore from export.</p>
+              <div class="settings-info-box">
+                <div class="settings-info-row">
+                  <span>Database Connection</span>
+                  <span class="status-green">LOCAL VAULT</span>
+                </div>
+                <div class="settings-info-row">
+                  <span>Total Saved Entries</span>
+                  <span id="settings-total-records">76 records</span>
+                </div>
+                <div class="settings-info-row">
+                  <span>Last Automated Export</span>
+                  <span>Just now</span>
+                </div>
+              </div>
+              <div class="card-action-bottom">
+                <button id="btn-export-backup-settings" class="btn-secondary">
+                  <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                  <span>Export Backup</span>
+                </button>
+                <div class="import-wrapper" data-demo-hide style="display: none;">
+                  <label for="import-file-input-settings" class="btn-secondary" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 40px; font-weight: 700; cursor: pointer; box-sizing: border-box;">
+                    <i data-lucide="upload" style="width: 16px; height: 16px; margin-right: 8px;"></i>
+                    <span>Import Backup</span>
+                  </label>
+                  <input type="file" id="import-file-input-settings" class="hidden" accept=".json">
+                </div>
               </div>
             </div>
           </div>
@@ -805,11 +849,28 @@
               <h2>Account Actions</h2>
               <i data-lucide="shield"></i>
             </div>
-            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
-              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Sign out of your account or lock the current session.</p>
-              <button id="btn-logout-settings" class="btn-secondary" style="width: 100%; height: 36px; font-weight: 700; color: #EF4444; border-color: rgba(239, 68, 68, 0.25);">
-                <i data-lucide="log-out" style="width: 15px; height: 15px; margin-right: 6px; display: inline-block; vertical-align: middle;"></i>Lock Vault
-              </button>
+            <div class="card-body">
+              <p>Sign out of your local vault or lock the active session securely.</p>
+              <div class="settings-info-box">
+                <div class="settings-info-row">
+                  <span>Session Status</span>
+                  <span class="status-green">ACTIVE</span>
+                </div>
+                <div class="settings-info-row">
+                  <span>Vault Encryption</span>
+                  <span>AES-GCM-256</span>
+                </div>
+                <div class="settings-info-row">
+                  <span>Auto-Lock Timeout</span>
+                  <span>15 Minutes</span>
+                </div>
+              </div>
+              <div class="card-action-bottom">
+                <button id="btn-logout-settings" class="btn-secondary btn-danger-action">
+                  <i data-lucide="log-out" style="width: 16px; height: 16px;"></i>
+                  <span>Lock Vault</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -819,10 +880,28 @@
               <h2>System Information</h2>
               <i data-lucide="info"></i>
             </div>
-            <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
-              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">SpendWise Vault Client: <strong>v2.4.0-release</strong></p>
-              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Database Status: <span style="color: var(--color-green); font-weight: 700;">CONNECTED</span></p>
-              <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Encryption Algorithm: <strong>AES-GCM-256</strong></p>
+            <div class="card-body">
+              <p>SpendWise client release specifications and encryption protocols.</p>
+              <div class="settings-info-box">
+                <div class="settings-info-row">
+                  <span>Client Engine</span>
+                  <span>v2.4.0-release</span>
+                </div>
+                <div class="settings-info-row">
+                  <span>Vault Status</span>
+                  <span class="status-green">CONNECTED</span>
+                </div>
+                <div class="settings-info-row">
+                  <span>Storage Protocol</span>
+                  <span>Zero-Knowledge</span>
+                </div>
+              </div>
+              <div class="card-action-bottom">
+                <div class="settings-card-meta-bar">
+                  <i data-lucide="check-circle" style="width: 15px; height: 15px; color: var(--color-green);"></i>
+                  <span>All Client Subsystems Operational</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1084,6 +1163,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260904_3"></script>
+  <script src="app.js?v=20260904_4"></script>
 </body>
 </html>

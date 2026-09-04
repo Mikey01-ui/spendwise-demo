@@ -6258,3 +6258,187 @@ body {
     height: 18px;
   }
 }
+
+/* ==========================================================
+   GENERAL SETTINGS GRID & CARD ELEMENT PLACEMENT
+   ========================================================== */
+#tab-general-settings .settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  gap: 24px;
+}
+
+#tab-general-settings .widget-card {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  padding: 24px !important;
+  border-radius: var(--card-radius, 20px) !important;
+  background-color: var(--bg-surface) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--card-shadow) !important;
+  box-sizing: border-box !important;
+  min-height: 290px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+#tab-general-settings .widget-header-new {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+#tab-general-settings .widget-header-new h2 {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+#tab-general-settings .widget-header-new i,
+#tab-general-settings .widget-header-new svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+#tab-general-settings .card-body {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  margin-top: 0 !important;
+}
+
+#tab-general-settings .card-body p {
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.settings-info-box {
+  background-color: var(--bg-surface-hover);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 2px 0;
+}
+
+.theme-dark .settings-info-box {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.theme-light .settings-info-box {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+}
+
+.settings-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.settings-info-row span:last-child {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.settings-info-row span.status-green {
+  color: #10B981 !important;
+}
+
+.theme-dark .settings-info-row span.status-green {
+  color: #D6FF1F !important;
+}
+
+#tab-general-settings .card-action-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+#tab-general-settings .btn-primary,
+#tab-general-settings .btn-secondary {
+  height: 40px !important;
+  border-radius: 12px !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#tab-general-settings .btn-primary {
+  background-color: #D6FF1F !important;
+  color: #0A0E17 !important;
+  border: none !important;
+}
+
+.theme-light #tab-general-settings .btn-primary {
+  background-color: #D6FF1F !important;
+  color: #0B1F17 !important;
+}
+
+#tab-general-settings .btn-secondary {
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+#tab-general-settings .btn-secondary:hover {
+  background-color: var(--bg-surface-hover) !important;
+}
+
+#tab-general-settings .btn-secondary.btn-danger-action {
+  color: #EF4444 !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+#tab-general-settings .btn-secondary.btn-danger-action:hover {
+  background-color: rgba(239, 68, 68, 0.08) !important;
+  border-color: #EF4444 !important;
+}
+
+.settings-card-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background-color: var(--bg-surface-hover);
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+.theme-dark .settings-card-meta-bar {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.theme-light .settings-card-meta-bar {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+}

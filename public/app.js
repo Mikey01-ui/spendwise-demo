@@ -2986,6 +2986,18 @@ const renderNotificationsTab = () => {
 
 // --- INITIALIZE: GENERAL SETTINGS TAB ---
 const initGeneralSettingsTab = () => {
+  // Sync current theme and records count in UI
+  const currentThemeSpan = document.getElementById('settings-current-theme');
+  if (currentThemeSpan) {
+    currentThemeSpan.textContent = state.theme === 'light' ? 'Light Mode' : 'Dark Mode';
+  }
+
+  const totalRecordsSpan = document.getElementById('settings-total-records');
+  if (totalRecordsSpan) {
+    const txCount = (state.data?.transactions || []).length;
+    totalRecordsSpan.textContent = `${txCount} records`;
+  }
+
   // Bind Theme Toggle in Settings
   const toggleBtn = document.getElementById('settings-theme-toggle');
   if (toggleBtn) {
@@ -2994,6 +3006,10 @@ const initGeneralSettingsTab = () => {
     newToggle.addEventListener('click', () => {
       if (elements.themeBtn) {
         elements.themeBtn.click();
+      }
+      const span = document.getElementById('settings-current-theme');
+      if (span) {
+        span.textContent = state.theme === 'light' ? 'Light Mode' : 'Dark Mode';
       }
     });
   }
