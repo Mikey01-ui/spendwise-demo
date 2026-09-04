@@ -2762,10 +2762,93 @@ const initThemeToggle = () => {
   }
 };
 
+// --- NOTIFICATION PREFERENCES STORAGE & STATE ---
+const getNotificationPreferences = () => {
+  try {
+    return {
+      budget: localStorage.getItem('spendwise_pref_budget_alerts') !== 'false',
+      renewal: localStorage.getItem('spendwise_pref_renewal_alerts') !== 'false',
+      impulse: localStorage.getItem('spendwise_pref_impulse_alerts') !== 'false'
+    };
+  } catch (e) {
+    return { budget: true, renewal: true, impulse: true };
+  }
+};
+
+const setNotificationPreference = (key, value) => {
+  try {
+    localStorage.setItem(`spendwise_pref_${key}_alerts`, value ? 'true' : 'false');
+  } catch (e) {}
+};
+
+const updateNotificationGuardBadge = (prefs) => {
+  const badge = document.getElementById('notif-guard-badge');
+  const text = document.getElementById('notif-guard-status-text');
+  if (!badge || !text) return;
+
+  const activeCount = (prefs.budget ? 1 : 0) + (prefs.renewal ? 1 : 0) + (prefs.impulse ? 1 : 0);
+  if (activeCount === 3) {
+    badge.classList.remove('paused');
+    text.textContent = 'Live Guard Active';
+  } else if (activeCount > 0) {
+    badge.classList.remove('paused');
+    text.textContent = `Guard Active (${activeCount}/3)`;
+  } else {
+    badge.classList.add('paused');
+    text.textContent = 'All Alerts Paused';
+  }
+};
+
+const syncNotificationToggles = () => {
+  const prefs = getNotificationPreferences();
+  updateNotificationGuardBadge(prefs);
+
+  const budgetToggle = document.getElementById('pref-budget-alerts');
+  const renewalToggle = document.getElementById('pref-renewal-alerts');
+  const impulseToggle = document.getElementById('pref-impulse-alerts');
+
+  if (budgetToggle) {
+    budgetToggle.checked = prefs.budget;
+    if (!budgetToggle.dataset.bound) {
+      budgetToggle.dataset.bound = 'true';
+      budgetToggle.addEventListener('change', (e) => {
+        setNotificationPreference('budget', e.target.checked);
+        renderNotificationsTab();
+      });
+    }
+  }
+
+  if (renewalToggle) {
+    renewalToggle.checked = prefs.renewal;
+    if (!renewalToggle.dataset.bound) {
+      renewalToggle.dataset.bound = 'true';
+      renewalToggle.addEventListener('change', (e) => {
+        setNotificationPreference('renewal', e.target.checked);
+        renderNotificationsTab();
+      });
+    }
+  }
+
+  if (impulseToggle) {
+    impulseToggle.checked = prefs.impulse;
+    if (!impulseToggle.dataset.bound) {
+      impulseToggle.dataset.bound = 'true';
+      impulseToggle.addEventListener('change', (e) => {
+        setNotificationPreference('impulse', e.target.checked);
+        renderNotificationsTab();
+      });
+    }
+  }
+};
+
 // --- RENDER: NOTIFICATIONS TAB ---
 const renderNotificationsTab = () => {
   const container = document.getElementById('tab-notifications');
   if (!container) return;
+
+  // Sync preference toggle switches and live status
+  syncNotificationToggles();
+  const prefs = getNotificationPreferences();
 
   const bodyContainer = document.getElementById('notifications-body-card');
   if (!bodyContainer) return;
@@ -2785,78 +2868,84 @@ const renderNotificationsTab = () => {
 
   const notifications = [];
 
-  // Budget warnings
-  const budgets = state.data.budgets || {};
-  Object.keys(budgets).forEach(cat => {
-    const limit = parseFloat(budgets[cat]);
-    if (limit > 0) {
-      const spent = spentMap[cat] || 0;
-      const ratio = (spent / limit) * 100;
-      if (ratio >= 80) {
+  // Budget warnings (evaluated if category budget threshold is enabled)
+  if (prefs.budget) {
+    const budgets = state.data.budgets || {};
+    Object.keys(budgets).forEach(cat => {
+      const limit = parseFloat(budgets[cat]);
+      if (limit > 0) {
+        const spent = spentMap[cat] || 0;
+        const ratio = (spent / limit) * 100;
+        if (ratio >= 80) {
+          notifications.push({
+            id: `budget-${cat}`,
+            type: ratio >= 100 ? 'error' : 'warning',
+            icon: 'piggy-bank',
+            color: ratio >= 100 ? '#EF4444' : '#F59E0B',
+            bg: ratio >= 100 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
+            message: ratio >= 100 
+              ? `Budget Alert: You have exceeded your monthly limit for ${cat} (${formatCurrency(spent)} spent of ${formatCurrency(limit)})!`
+              : `Budget Warning: You have spent ${ratio.toFixed(0)}% of your monthly limit for ${cat} (${formatCurrency(spent)} spent of ${formatCurrency(limit)}).`,
+            time: 'Active'
+          });
+        }
+      }
+    });
+  }
+
+  // Renewal warnings (evaluated if subscription renewals trigger is enabled)
+  if (prefs.renewal) {
+    const subs = state.data.subscriptions || [];
+    subs.forEach(sub => {
+      if (sub.active) {
+        const renewalDate = new Date(sub.nextRenewal);
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const diffDays = Math.ceil((renewalDate - today) / (1000 * 60 * 60 * 24));
+        if (diffDays >= 0 && diffDays <= 7) {
+          notifications.push({
+            id: `sub-${sub.id}`,
+            type: 'info',
+            icon: 'refresh-cw',
+            color: '#7C3AED',
+            bg: 'rgba(139, 92, 246, 0.1)',
+            message: diffDays === 0 
+              ? `Renewal Alert: Your ${sub.name} subscription renews today (${formatCurrency(sub.cost)}).`
+              : `Upcoming Renewal: Your ${sub.name} subscription renews in ${diffDays} day${diffDays > 1 ? 's' : ''} (${formatCurrency(sub.cost)}).`,
+            time: `${diffDays} days left`
+          });
+        }
+      }
+    });
+  }
+
+  // Impulse spending alert (evaluated if impulse alerts trigger is enabled)
+  if (prefs.impulse) {
+    let totalExpenses = 0;
+    let totalWants = 0;
+    txs.forEach(tx => {
+      if (tx.type === 'expense' && tx.date.substring(0, 7) === selectedMonthStr) {
+        const amt = parseFloat(tx.amount);
+        totalExpenses += amt;
+        if (!resolveIsNecessary(tx)) {
+          totalWants += amt;
+        }
+      }
+    });
+
+    if (totalExpenses > 0) {
+      const wantsRatio = (totalWants / totalExpenses) * 100;
+      if (wantsRatio >= 40) {
         notifications.push({
-          id: `budget-${cat}`,
-          type: ratio >= 100 ? 'error' : 'warning',
-          icon: 'piggy-bank',
-          color: ratio >= 100 ? '#EF4444' : '#F59E0B',
-          bg: ratio >= 100 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
-          message: ratio >= 100 
-            ? `Budget Alert: You have exceeded your monthly limit for ${cat} (${formatCurrency(spent)} spent of ${formatCurrency(limit)})!`
-            : `Budget Warning: You have spent ${ratio.toFixed(0)}% of your monthly limit for ${cat} (${formatCurrency(spent)} spent of ${formatCurrency(limit)}).`,
-          time: 'Active'
+          id: 'impulse-alert',
+          type: 'warning',
+          icon: 'sparkles',
+          color: '#D6FF1F',
+          bg: 'rgba(214, 255, 31, 0.1)',
+          message: `Spending Alert: Impulse wants make up ${wantsRatio.toFixed(0)}% of your total expenses this month (${formatCurrency(totalWants)} of ${formatCurrency(totalExpenses)}).`,
+          time: 'This Month'
         });
       }
-    }
-  });
-
-  // Renewal warnings
-  const subs = state.data.subscriptions || [];
-  subs.forEach(sub => {
-    if (sub.active) {
-      const renewalDate = new Date(sub.nextRenewal);
-      const today = new Date();
-      today.setHours(0,0,0,0);
-      const diffDays = Math.ceil((renewalDate - today) / (1000 * 60 * 60 * 24));
-      if (diffDays >= 0 && diffDays <= 7) {
-        notifications.push({
-          id: `sub-${sub.id}`,
-          type: 'info',
-          icon: 'refresh-cw',
-          color: '#7C3AED',
-          bg: 'rgba(139, 92, 246, 0.1)',
-          message: diffDays === 0 
-            ? `Renewal Alert: Your ${sub.name} subscription renews today (${formatCurrency(sub.cost)}).`
-            : `Upcoming Renewal: Your ${sub.name} subscription renews in ${diffDays} day${diffDays > 1 ? 's' : ''} (${formatCurrency(sub.cost)}).`,
-          time: `${diffDays} days left`
-        });
-      }
-    }
-  });
-
-  // Impulse spending alert
-  let totalExpenses = 0;
-  let totalWants = 0;
-  txs.forEach(tx => {
-    if (tx.type === 'expense' && tx.date.substring(0, 7) === selectedMonthStr) {
-      const amt = parseFloat(tx.amount);
-      totalExpenses += amt;
-      if (!resolveIsNecessary(tx)) {
-        totalWants += amt;
-      }
-    }
-  });
-
-  if (totalExpenses > 0) {
-    const wantsRatio = (totalWants / totalExpenses) * 100;
-    if (wantsRatio >= 40) {
-      notifications.push({
-        id: 'impulse-alert',
-        type: 'warning',
-        icon: 'sparkles',
-        color: '#D6FF1F',
-        bg: 'rgba(214, 255, 31, 0.1)',
-        message: `Spending Alert: Impulse wants make up ${wantsRatio.toFixed(0)}% of your total expenses this month (${formatCurrency(totalWants)} of ${formatCurrency(totalExpenses)}).`,
-        time: 'This Month'
-      });
     }
   }
 
@@ -2865,8 +2954,8 @@ const renderNotificationsTab = () => {
     bodyContainer.innerHTML = `
       <div class="empty-state" style="padding: 40px 10px; text-align: center;">
         <i data-lucide="bell-off" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px; display: inline-block;"></i>
-        <h3>No notifications yet</h3>
-        <p>We'll notify you here when category budgets approach their limits or subscriptions are due.</p>
+        <h3>No active notifications</h3>
+        <p>${(prefs.budget || prefs.renewal || prefs.impulse) ? "We'll notify you here when category budgets approach their limits or subscriptions are due." : "All notification triggers are currently paused in your preferences below."}</p>
       </div>
     `;
     refreshIcons();
@@ -3371,6 +3460,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initChartCalendar();
   initPwa();
   initMobileRefresh();
+  syncNotificationToggles();
 
   // Bind click trigger on Latest Transaction Banner
   const banner = document.getElementById('latest-tx-banner');

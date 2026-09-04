@@ -26,7 +26,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- CSS -->
-  <link rel="stylesheet" href="styles.css?v=20260904_2">
+  <link rel="stylesheet" href="styles.css?v=20260904_3">
 </head>
 <body>
 
@@ -642,27 +642,94 @@
         </div>
 
         <!-- Notification Preferences Card -->
-        <div class="widget-card" style="margin-top: 24px; padding: 16px;">
-          <div class="widget-header-new" style="justify-content: flex-start !important; gap: 8px !important;">
-            <h2>Notification Preferences</h2>
-            <i data-lucide="sliders" style="width: 18px; height: 18px; color: var(--text-secondary);"></i>
-          </div>
-          <div class="card-body" style="margin-top: 12px; display: flex; flex-direction: column; gap: 14px;">
-            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4;">Configure when SpendWise should trigger alerts and warning notifications.</p>
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; cursor: pointer; color: var(--text-primary);">
-                <input type="checkbox" checked style="width: 16px !important; height: 16px !important; margin: 0 !important;">
-                <span>Category Budget Threshold (Warn at 80% capacity)</span>
-              </label>
-              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; cursor: pointer; color: var(--text-primary);">
-                <input type="checkbox" checked style="width: 16px !important; height: 16px !important; margin: 0 !important;">
-                <span>Subscription Renewals (Remind 7 days before billing)</span>
-              </label>
-              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; cursor: pointer; color: var(--text-primary);">
-                <input type="checkbox" checked style="width: 16px !important; height: 16px !important; margin: 0 !important;">
-                <span>Impulse Spending Alerts (Flag when wants exceed 40% of budget)</span>
-              </label>
+        <div class="widget-card notif-pref-card" style="margin-top: 24px;">
+          <div class="notif-pref-header">
+            <div class="notif-pref-header-left">
+              <div class="notif-pref-icon-halo">
+                <i data-lucide="sliders"></i>
+              </div>
+              <div class="notif-pref-title-group">
+                <h2>Notification Preferences</h2>
+                <p>Configure automated triggers, budget thresholds, and recurring charge audits.</p>
+              </div>
             </div>
+            <div class="notif-live-badge" id="notif-guard-badge">
+              <span class="live-pulse-dot"></span>
+              <span id="notif-guard-status-text">Live Guard Active</span>
+            </div>
+          </div>
+
+          <div class="notif-pref-list">
+            <!-- Row 1: Category Budget Threshold -->
+            <div class="notif-pref-item">
+              <div class="notif-pref-item-left">
+                <div class="notif-item-icon-box box-amber">
+                  <i data-lucide="pie-chart"></i>
+                </div>
+                <div class="notif-pref-item-text">
+                  <div class="notif-pref-item-headline">
+                    <span class="notif-pref-name">Category Budget Threshold</span>
+                    <span class="notif-pref-tag tag-amber">80% Limit</span>
+                  </div>
+                  <p class="notif-pref-desc">Warn when category expenses hit 80% of your allocated monthly budget.</p>
+                </div>
+              </div>
+              <div class="notif-pref-item-right">
+                <label class="spendwise-toggle-switch" for="pref-budget-alerts">
+                  <input type="checkbox" id="pref-budget-alerts" checked>
+                  <span class="spendwise-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Row 2: Subscription Renewals -->
+            <div class="notif-pref-item">
+              <div class="notif-pref-item-left">
+                <div class="notif-item-icon-box box-purple">
+                  <i data-lucide="refresh-cw"></i>
+                </div>
+                <div class="notif-pref-item-text">
+                  <div class="notif-pref-item-headline">
+                    <span class="notif-pref-name">Subscription Renewals</span>
+                    <span class="notif-pref-tag tag-purple">7-Day Notice</span>
+                  </div>
+                  <p class="notif-pref-desc">Remind 7 days before recurring subscription and software renewals bill.</p>
+                </div>
+              </div>
+              <div class="notif-pref-item-right">
+                <label class="spendwise-toggle-switch" for="pref-renewal-alerts">
+                  <input type="checkbox" id="pref-renewal-alerts" checked>
+                  <span class="spendwise-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Row 3: Impulse Spending Alerts -->
+            <div class="notif-pref-item">
+              <div class="notif-pref-item-left">
+                <div class="notif-item-icon-box box-rose">
+                  <i data-lucide="alert-triangle"></i>
+                </div>
+                <div class="notif-pref-item-text">
+                  <div class="notif-pref-item-headline">
+                    <span class="notif-pref-name">Impulse Spending Alerts</span>
+                    <span class="notif-pref-tag tag-rose">40% Want Cap</span>
+                  </div>
+                  <p class="notif-pref-desc">Flag discretionary purchases whenever non-essential wants exceed 40% of total budget.</p>
+                </div>
+              </div>
+              <div class="notif-pref-item-right">
+                <label class="spendwise-toggle-switch" for="pref-impulse-alerts">
+                  <input type="checkbox" id="pref-impulse-alerts" checked>
+                  <span class="spendwise-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="notif-pref-footer">
+            <i data-lucide="shield-check"></i>
+            <span>Preferences are saved locally and evaluate rules in real-time. Toggling instantly refreshes your active alerts.</span>
           </div>
         </div>
       </section>
@@ -1017,6 +1084,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260904_2"></script>
+  <script src="app.js?v=20260904_3"></script>
 </body>
 </html>
