@@ -3879,49 +3879,8 @@ body {
 
 /* Responsive adjustments for layout elements */
 @media (max-width: 1200px) {
-  body {
-    overflow-y: auto;
-  }
-  .app-layout {
-    flex-direction: column;
-    min-height: 100vh;
-    overflow: visible !important;
-  }
-  .app-layout .sidebar {
-    height: auto;
-    width: 100% !important;
-    border-right: none !important;
-    border-bottom: var(--border-sidebar-right) !important;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-  }
-  .app-layout .sidebar-brand {
-    margin-bottom: 0 !important;
-  }
-  .app-layout .sidebar-menu {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 0 !important;
-  }
-  .app-layout .sidebar-collapse-toggle {
-    display: none !important;
-  }
-  .app-layout .sidebar-footer {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .app-layout .btn-theme-toggle {
-    margin-bottom: 0;
-    width: auto;
-  }
   .app-layout .main-content {
-    height: auto !important;
-    width: 100% !important;
-    margin-left: 0 !important;
-    padding: 24px !important;
+    padding: 28px 24px !important;
   }
 }
 

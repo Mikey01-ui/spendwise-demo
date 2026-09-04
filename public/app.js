@@ -16,10 +16,21 @@ const state = {
   demoMode: isDemoMode(),
   token: isDemoMode() ? null : (localStorage.getItem('spendwise_token') || null),
   data: {
-    profile: { currency: 'EUR', hourlyWage: 18.50 },
-    budgets: {},
+    profile: { currency: 'EUR', hourlyWage: 18.50, startingBalance: 8312.49, displayName: 'Alex' },
+    budgets: {
+      Food: 320,
+      Shopping: 180,
+      Transport: 95,
+      Miscellaneous: 120
+    },
     transactions: [],
-    subscriptions: []
+    subscriptions: [
+      { id: 'demo_sub_001', name: 'Spotify Premium Family', cost: 17.99, cycle: 'monthly', category: 'Entertainment', active: true },
+      { id: 'demo_sub_002', name: 'Fitness Club Membership', cost: 35.00, cycle: 'monthly', category: 'Health', active: true },
+      { id: 'demo_sub_003', name: 'GitHub Pro & Copilot', cost: 19.00, cycle: 'monthly', category: 'Software', active: true },
+      { id: 'demo_sub_004', name: '5G Unlimited Data Plan', cost: 20.00, cycle: 'monthly', category: 'Utilities', active: true },
+      { id: 'demo_sub_005', name: 'Figma Professional', cost: 15.00, cycle: 'monthly', category: 'Software', active: true }
+    ]
   },
   activeTab: 'dashboard',
   currentTxType: 'expense',
@@ -389,6 +400,8 @@ const formatMonthShort = (monthKey) => {
 
 const isCurrentMonth = (monthKey) => monthKey === getCurrentMonthKey();
 
+const txInSelectedMonth = (tx) => tx && tx.date && tx.date.substring(0, 7) === state.selectedMonth;
+
 // ==================== REALISTIC TRANSACTION GENERATOR ====================
 
 const generateMonthTransactions = (monthKey) => {
@@ -604,6 +617,23 @@ const ensureMonthHasData = (monthKey) => {
 const ensureCurrentAndRecentMonthsData = () => {
   if (!state.data) state.data = {};
   if (!state.data.transactions) state.data.transactions = [];
+  if (!state.data.budgets || Object.keys(state.data.budgets).length === 0) {
+    state.data.budgets = {
+      Food: 320,
+      Shopping: 180,
+      Transport: 95,
+      Miscellaneous: 120
+    };
+  }
+  if (!state.data.subscriptions || state.data.subscriptions.length === 0) {
+    state.data.subscriptions = [
+      { id: 'demo_sub_001', name: 'Spotify Premium Family', cost: 17.99, cycle: 'monthly', category: 'Entertainment', active: true },
+      { id: 'demo_sub_002', name: 'Fitness Club Membership', cost: 35.00, cycle: 'monthly', category: 'Health', active: true },
+      { id: 'demo_sub_003', name: 'GitHub Pro & Copilot', cost: 19.00, cycle: 'monthly', category: 'Software', active: true },
+      { id: 'demo_sub_004', name: '5G Unlimited Data Plan', cost: 20.00, cycle: 'monthly', category: 'Utilities', active: true },
+      { id: 'demo_sub_005', name: 'Figma Professional', cost: 15.00, cycle: 'monthly', category: 'Software', active: true }
+    ];
+  }
 
   const currentKey = getCurrentMonthKey();
   const prevKey = getPreviousMonthKey(currentKey);
@@ -788,7 +818,7 @@ elements.mobileLogoutBtn.addEventListener('click', logout);
 const fetchData = async () => {
   if (state.demoMode) {
     try {
-      const response = await fetch('/demo-data.json');
+      const response = await fetch(new URL('demo-data.json', window.location.href));
       if (!response.ok) throw new Error('Failed to load demo data');
       state.data = await response.json();
       ensureCurrentAndRecentMonthsData();
@@ -1066,15 +1096,63 @@ const renderApp = () => {
   refreshIcons();
 };
 
+const categoryMeta = {
+  homelab: { icon: 'server', bg: 'rgba(59, 130, 246, 0.12)', color: '#2563EB' },
+  food: { icon: 'utensils', bg: 'rgba(245, 158, 11, 0.12)', color: '#D97706' },
+  shopping: { icon: 'shopping-bag', bg: 'rgba(236, 72, 153, 0.12)', color: '#DB2777' },
+  entertainment: { icon: 'sparkles', bg: 'rgba(236, 72, 153, 0.12)', color: '#DB2777' },
+  subscriptions: { icon: 'refresh-cw', bg: 'rgba(139, 92, 246, 0.12)', color: '#7C3AED' },
+  school: { icon: 'graduation-cap', bg: 'rgba(16, 185, 129, 0.12)', color: '#059669' },
+  utilities: { icon: 'zap', bg: 'rgba(6, 182, 212, 0.12)', color: '#0891B2' },
+  transit: { icon: 'train', bg: 'rgba(99, 102, 241, 0.12)', color: '#4F46E5' },
+  transport: { icon: 'train', bg: 'rgba(99, 102, 241, 0.12)', color: '#4F46E5' },
+  miscellaneous: { icon: 'tag', bg: 'rgba(107, 114, 128, 0.12)', color: '#4B5563' },
+  rent: { icon: 'home', bg: 'rgba(6, 182, 212, 0.12)', color: '#0891B2' },
+  income: { icon: 'banknote', bg: 'rgba(16, 185, 129, 0.12)', color: '#059669' },
+  salary: { icon: 'briefcase', bg: 'rgba(16, 185, 129, 0.12)', color: '#059669' },
+  gift: { icon: 'gift', bg: 'rgba(236, 72, 153, 0.12)', color: '#DB2777' },
+  'side gig': { icon: 'laptop', bg: 'rgba(99, 102, 241, 0.12)', color: '#4F46E5' },
+  refund: { icon: 'rotate-ccw', bg: 'rgba(6, 182, 212, 0.12)', color: '#0891B2' },
+  allowance: { icon: 'wallet', bg: 'rgba(245, 158, 11, 0.12)', color: '#D97706' },
+  other: { icon: 'help-circle', bg: 'rgba(107, 114, 128, 0.12)', color: '#4B5563' }
+};
+
+const getDisplayName = (name) => {
+  if (!name) return '';
+  const trimmed = name.trim();
+  const parenIndex = trimmed.indexOf('(');
+  return parenIndex > 0 ? trimmed.slice(0, parenIndex).trim() : trimmed;
+};
+
+const getCategoryMeta = (cat) => {
+  const normalized = (cat || 'other').toLowerCase();
+  return categoryMeta[normalized] || categoryMeta.other;
+};
+
+const getTxMeta = (tx) => {
+  if (tx.type === 'income') {
+    const cat = (tx.category || 'income').toLowerCase();
+    return categoryMeta[cat] || categoryMeta.income;
+  }
+  const resolved = resolveExpenseCategory(tx).toLowerCase();
+  return categoryMeta[resolved] || categoryMeta.other;
+};
+
+const getBreakdownBucket = (tx) => resolveExpenseCategory(tx);
+
 // --- RENDER LATEST TRANSACTION BANNER ---
 const renderLatestTxBanner = () => {
   const container = document.getElementById('latest-tx-banner');
   if (!container) return;
 
   const txs = state.data.transactions;
-  const monthTxs = (txs || [])
+  let monthTxs = (txs || [])
     .filter(txInSelectedMonth)
     .sort((a, b) => b.date.localeCompare(a.date));
+
+  if (!monthTxs.length && (txs || []).length > 0) {
+    monthTxs = [...txs].sort((a, b) => b.date.localeCompare(a.date));
+  }
 
   if (!monthTxs.length) {
     const monthLabel = formatMonthLabel(state.selectedMonth, true);
@@ -1335,50 +1413,6 @@ const renderDashboard = () => {
   // 8. Latest Transaction Banner
   renderLatestTxBanner();
 };
-
-const categoryMeta = {
-  homelab: { icon: 'server', bg: 'rgba(59, 130, 246, 0.12)', color: '#2563EB' },
-  food: { icon: 'utensils', bg: 'rgba(245, 158, 11, 0.12)', color: '#D97706' },
-  shopping: { icon: 'shopping-bag', bg: 'rgba(236, 72, 153, 0.12)', color: '#DB2777' },
-  entertainment: { icon: 'sparkles', bg: 'rgba(236, 72, 153, 0.12)', color: '#DB2777' },
-  subscriptions: { icon: 'refresh-cw', bg: 'rgba(139, 92, 246, 0.12)', color: '#7C3AED' },
-  school: { icon: 'graduation-cap', bg: 'rgba(16, 185, 129, 0.12)', color: '#059669' },
-  utilities: { icon: 'zap', bg: 'rgba(6, 182, 212, 0.12)', color: '#0891B2' },
-  transit: { icon: 'train', bg: 'rgba(99, 102, 241, 0.12)', color: '#4F46E5' },
-  transport: { icon: 'train', bg: 'rgba(99, 102, 241, 0.12)', color: '#4F46E5' },
-  miscellaneous: { icon: 'tag', bg: 'rgba(107, 114, 128, 0.12)', color: '#4B5563' },
-  rent: { icon: 'home', bg: 'rgba(6, 182, 212, 0.12)', color: '#0891B2' },
-  income: { icon: 'banknote', bg: 'rgba(16, 185, 129, 0.12)', color: '#059669' },
-  salary: { icon: 'briefcase', bg: 'rgba(16, 185, 129, 0.12)', color: '#059669' },
-  gift: { icon: 'gift', bg: 'rgba(236, 72, 153, 0.12)', color: '#DB2777' },
-  'side gig': { icon: 'laptop', bg: 'rgba(99, 102, 241, 0.12)', color: '#4F46E5' },
-  refund: { icon: 'rotate-ccw', bg: 'rgba(6, 182, 212, 0.12)', color: '#0891B2' },
-  allowance: { icon: 'wallet', bg: 'rgba(245, 158, 11, 0.12)', color: '#D97706' },
-  other: { icon: 'help-circle', bg: 'rgba(107, 114, 128, 0.12)', color: '#4B5563' }
-};
-
-const getDisplayName = (name) => {
-  if (!name) return '';
-  const trimmed = name.trim();
-  const parenIndex = trimmed.indexOf('(');
-  return parenIndex > 0 ? trimmed.slice(0, parenIndex).trim() : trimmed;
-};
-
-const getCategoryMeta = (cat) => {
-  const normalized = (cat || 'other').toLowerCase();
-  return categoryMeta[normalized] || categoryMeta.other;
-};
-
-const getTxMeta = (tx) => {
-  if (tx.type === 'income') {
-    const cat = (tx.category || 'income').toLowerCase();
-    return categoryMeta[cat] || categoryMeta.income;
-  }
-  const resolved = resolveExpenseCategory(tx).toLowerCase();
-  return categoryMeta[resolved] || categoryMeta.other;
-};
-
-const getBreakdownBucket = (tx) => resolveExpenseCategory(tx);
 
 // Render Doughnut Chart using merchant-aware expense categories
 const renderChart = (txs, currentMonthStr) => {
@@ -1720,10 +1754,15 @@ const renderTrendChart = (txs) => {
 
 // Render Recent Activity (Avatars bubbles + Activity Feed rows)
 const renderRecentActivity = (txs) => {
-  const recentTxs = txs
+  let recentTxs = (txs || [])
     .filter(txInSelectedMonth)
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 5);
+  if (recentTxs.length === 0 && (txs || []).length > 0) {
+    recentTxs = [...txs]
+      .sort((a, b) => b.date.localeCompare(a.date))
+      .slice(0, 5);
+  }
   const bubblesContainer = document.getElementById('overlapping-bubbles-container');
   
   if (bubblesContainer) {
@@ -1848,7 +1887,10 @@ const renderDashboardBudgets = (txs) => {
       <button class="btn-icon-more btn-to-settings" type="button"><i data-lucide="more-horizontal"></i></button>
     `;
     
-    row.querySelector('.btn-to-settings').addEventListener('click', () => switchTab('settings'));
+    const btnSettings = row.querySelector('.btn-to-settings');
+    if (btnSettings) {
+      btnSettings.addEventListener('click', () => switchTab('settings'));
+    }
     budgetsList.appendChild(row);
   });
 
@@ -3127,12 +3169,15 @@ const initMonthPicker = () => {
 };
 
 const initPwa = () => {
-  if (!state.demoMode && 'serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch((err) => {
-        console.warn('SpendWise service worker registration failed:', err);
-      });
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const registration of registrations) {
+        registration.unregister();
+      }
     });
+  }
+  if ('caches' in window) {
+    caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
   }
 
   initPullToRefresh();
